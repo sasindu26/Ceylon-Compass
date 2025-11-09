@@ -1,0 +1,372 @@
+/* Professional Hero Section styling for Ceylon Compass */
+
+:root {
+  /* Professional color palette */
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --primary-light: rgba(37, 99, 235, 0.1);
+  --secondary: #0056b3;
+  --dark-blue: #1e2a4a;
+  --accent: #3b82f6;
+  --text-dark: #1e293b;
+  --text-light: #64748b;
+  --white: #ffffff;
+  --background: #f8fafc;
+  --border: #e2e8f0;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 999px;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.05), 0 1px 5px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+.heroSection {
+  position: relative;
+  min-height: 600px;
+  background: linear-gradient(135deg, var(--dark-blue), var(--secondary));
+  color: var(--white);
+  padding: 5rem 0;
+  overflow: hidden;
+}
+
+.heroSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/images/pattern.svg'); /* Add your pattern SVG */
+  opacity: 0.05;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  position: relative;
+  z-index: 2;
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+/* Text Content Styles */
+.textContent {
+  flex: 1;
+  max-width: 550px;
+  animation: fadeInLeft 1s ease;
+}
+
+.foodBadge {
+  display: inline-block;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--white);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.heading {
+  font-family: var(--font-heading, 'Poppins', sans-serif);
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  color: #000000;
+}
+
+.highlight {
+  color: var(--accent);
+  position: relative;
+}
+
+.highlight::after {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: 0;
+  width: 100%;
+  height: 8px;
+  background-color: rgba(59, 130, 246, 0.3);
+  z-index: -1;
+  border-radius: var(--radius-sm);
+}
+
+.description {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+  opacity: 0.9;
+}
+
+/* Image Content Styles */
+.imageContent {
+  flex: 1;
+  position: relative;
+  height: 450px;
+  animation: fadeInRight 1s ease;
+}
+
+.mainImageContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circleBackground {
+  position: absolute;
+  width: 360px;
+  height: 360px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(5px);
+  z-index: 1;
+}
+
+.mainImage {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  overflow: hidden;
+  border-radius: var(--radius-full);
+  box-shadow: var(--shadow-lg);
+  z-index: 2;
+}
+
+.mainImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.mainImage:hover img {
+  transform: scale(1.05);
+}
+
+/* Food Items Styles */
+.foodItem1, .foodItem2 {
+  position: absolute;
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  padding: 1rem;
+  transition: var(--transition);
+  z-index: 3;
+}
+
+.foodItem1 {
+  bottom: 30px;
+  left: 0;
+  animation: floatAnimation 3s ease-in-out infinite alternate;
+}
+
+.foodItem2 {
+  top: 60px;
+  right: 0;
+  animation: floatAnimation 4s ease-in-out infinite alternate;
+}
+
+.foodItem1:hover, .foodItem2:hover {
+  transform: translateY(-10px);
+  box-shadow: var(--shadow-lg);
+}
+
+.foodItem1 img, .foodItem2 img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: var(--radius-full);
+  border: 3px solid var(--primary-light);
+}
+
+.foodItemLabel {
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+.foodItemLabel p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--text-dark);
+  font-weight: 500;
+}
+
+.foodItemLabel .price {
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* Animations */
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes floatAnimation {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-10px);
+  }
+}
+
+/* Responsive Styles */
+@media (max-width: 1200px) {
+  .heading {
+    font-size: 3rem;
+  }
+  
+  .circleBackground {
+    width: 320px;
+    height: 320px;
+  }
+  
+  .mainImage {
+    width: 280px;
+    height: 280px;
+  }
+}
+
+@media (max-width: 992px) {
+  .content {
+    flex-direction: column;
+  }
+  
+  .textContent {
+    max-width: 100%;
+    text-align: center;
+  }
+  
+  .description {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .imageContent {
+    margin-top: 2rem;
+    height: 400px;
+  }
+  
+  .heading {
+    font-size: 2.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroSection {
+    padding: 4rem 0;
+  }
+  
+  .heading {
+    font-size: 2.25rem;
+  }
+  
+  .description {
+    font-size: 1.1rem;
+  }
+  
+  .imageContent {
+    height: 350px;
+  }
+  
+  .circleBackground {
+    width: 280px;
+    height: 280px;
+  }
+  
+  .mainImage {
+    width: 240px;
+    height: 240px;
+  }
+  
+  .foodItem1, .foodItem2 {
+    padding: 0.75rem;
+  }
+  
+  .foodItem1 img, .foodItem2 img {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .heroSection {
+    padding: 3rem 0;
+  }
+  
+  .heading {
+    font-size: 1.875rem;
+  }
+  
+  .description {
+    font-size: 1rem;
+  }
+  
+  .imageContent {
+    height: 300px;
+  }
+  
+  .circleBackground {
+    width: 240px;
+    height: 240px;
+  }
+  
+  .mainImage {
+    width: 200px;
+    height: 200px;
+  }
+  
+  .foodItem1, .foodItem2 {
+    padding: 0.5rem;
+  }
+  
+  .foodItem1 img, .foodItem2 img {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .foodItem1 {
+    left: 10px;
+  }
+  
+  .foodItem2 {
+    right: 10px;
+  }
+}
