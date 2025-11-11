@@ -20,31 +20,37 @@ const Restaurants = () => {
     city: '',
     showAll: false
   });
-  const [initialLoad, setInitialLoad] = useState(true);
+  const [filtersInitialized, setFiltersInitialized] = useState(false);
 
   // Set initial filters from user data when component mounts
   useEffect(() => {
-    if (user && initialLoad) {
-      const newFilters = {
-        country: user.country || '',
-        city: user.city || '',
-        showAll: false
-      };
-      console.log('Setting initial user location filters:', newFilters);
-      setFilters(newFilters);
-      setInitialLoad(false);
-    } else if (!user && initialLoad) {
-      // If no user is logged in, show all restaurants
-      const newFilters = {
-        country: '',
-        city: '',
-        showAll: true
-      };
-      console.log('No user detected, showing all restaurants');
-      setFilters(newFilters);
-      setInitialLoad(false);
+    if (!filtersInitialized) {
+      if (user) {
+        const newFilters = {
+          country: user.country || '',
+          city: '', // Don't auto-set city, let user choose
+          showAll: false
+        };
+        console.log('==== RESTAURANTS PAGE INITIALIZATION ====');
+        console.log('User object:', user);
+        console.log('User country:', user.country);
+        console.log('User city:', user.city);
+        console.log('Setting initial user location filters:', newFilters);
+        setFilters(newFilters);
+      } else {
+        // If no user is logged in, show all restaurants
+        const newFilters = {
+          country: '',
+          city: '',
+          showAll: true
+        };
+        console.log('==== RESTAURANTS PAGE INITIALIZATION ====');
+        console.log('No user detected, showing all restaurants');
+        setFilters(newFilters);
+      }
+      setFiltersInitialized(true);
     }
-  }, [user, initialLoad]);
+  }, [user, filtersInitialized]);
 
   // Fetch restaurants when filters change or component mounts
   useEffect(() => {
@@ -113,25 +119,14 @@ const Restaurants = () => {
       }
     };
 
-    // Only fetch if we have initialized the filters 
-    // (either from user data or default "show all")
-    if (!initialLoad) {
+    // Fetch restaurants whenever filters are initialized or changed
+    if (filtersInitialized) {
       fetchRestaurants();
     }
-  }, [filters, initialLoad]);
+  }, [filters, filtersInitialized]);
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
-  };
-
-  const handleAddRestaurant = () => {
-    if (isAuthenticated) {
-      navigate('/restaurants/add');
-    } else {
-      if (window.confirm('You need to log in first to add a new restaurant. Would you like to log in now?')) {
-        navigate('/login');
-      }
-    }
   };
 
   return (
@@ -145,13 +140,6 @@ const Restaurants = () => {
           onFilterChange={handleFilterChange}
           initialFilters={filters}
         />
-        
-        <div className="add-event-container">
-          <button onClick={handleAddRestaurant} className="add-new-event">
-            <i className="fas fa-plus"></i>
-            Add New Restaurant
-          </button>
-        </div>
       </div>
       
       {error && <div className="error-message">{error}</div>}

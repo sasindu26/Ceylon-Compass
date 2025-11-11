@@ -4,6 +4,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const path = require('path');
+const session = require('express-session');
+const passport = require('./config/passport');
 const { auth, isAdmin } = require('./middleware/auth');
 const requestRoutes = require('./routes/requestRoutes');
 const emailConfig = require('./config/emailConfig');
@@ -13,9 +15,27 @@ const { cleanupPastEvents } = require('./utils/eventCleanup');
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Session middleware for Passport
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'ceylon-compass-secret-key-2024',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Request logger middleware
 app.use((req, res, next) => {
@@ -101,6 +121,7 @@ app.use('/api/accommodationreq', auth, require('./routes/accommodationreq'));
 app.use('/api/admin', auth, isAdmin, require('./routes/admin'));
 app.use('/api/notifications', auth, require('./routes/notifications'));
 app.use('/api/contact', require('./routes/contact'));
+app.use('/api/bookings', require('./routes/bookings'));
 app.use('/api', requestRoutes);
 
 // Error handling middleware

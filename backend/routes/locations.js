@@ -6,8 +6,31 @@ const { auth, isAdmin } = require('../middleware/auth');
 // Get all countries
 router.get('/countries', async (req, res) => {
   try {
-    const countries = await Location.distinct('country');
-    res.json(countries);
+    const allCountries = await Location.distinct('country');
+    
+    // Define top 5 most popular countries
+    const topCountries = [
+      'Sri Lanka',
+      'United Kingdom', 
+      'United Arab Emirates',
+      'Thailand',
+      'India'
+    ];
+    
+    // Separate top countries that exist in database
+    const availableTopCountries = topCountries.filter(country => 
+      allCountries.includes(country)
+    );
+    
+    // Get remaining countries (exclude top countries) and sort alphabetically
+    const remainingCountries = allCountries
+      .filter(country => !topCountries.includes(country))
+      .sort();
+    
+    // Combine: top countries first, then rest alphabetically
+    const sortedCountries = [...availableTopCountries, ...remainingCountries];
+    
+    res.json(sortedCountries);
   } catch (error) {
     console.error('Error fetching countries:', error);
     res.status(500).json({ message: 'Server error', error: error.message });

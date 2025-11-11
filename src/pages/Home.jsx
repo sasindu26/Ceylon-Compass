@@ -9,39 +9,60 @@ import HomePageTop from '../components/HomePageTop';
 const Home = () => {
   const { isAuthenticated } = useAuth();
   const [upcomingEvents, setUpcomingEvents] = useState([]);
+  const [counts, setCounts] = useState({
+    restaurants: 0,
+    accommodations: 0,
+    events: 0
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchUpcomingEvents = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        // Use axios instead of fetch for better error handling
-        const response = await axios.get('http://localhost:5000/api/events');
         
-        if (response.data && Array.isArray(response.data)) {
+        // Fetch upcoming events
+        const eventsResponse = await axios.get('http://localhost:5000/api/events?showAll=true&sort=asc');
+        
+        // Fetch restaurants count
+        const restaurantsResponse = await axios.get('http://localhost:5000/api/restaurants?showAll=true');
+        
+        // Fetch accommodations count
+        const accommodationsResponse = await axios.get('http://localhost:5000/api/accommodations?showAll=true');
+        
+        if (eventsResponse.data && Array.isArray(eventsResponse.data)) {
           // Filter future events and sort by date
           const currentDate = new Date();
-          const futureEvents = response.data
+          const futureEvents = eventsResponse.data
             .filter(event => new Date(event.date) > currentDate)
             .sort((a, b) => new Date(a.date) - new Date(b.date))
             .slice(0, 3); // Get only the 3 nearest events
           
           setUpcomingEvents(futureEvents);
+          
+          // Set counts
+          setCounts({
+            restaurants: restaurantsResponse.data?.length || 0,
+            accommodations: accommodationsResponse.data?.length || 0,
+            events: eventsResponse.data.filter(event => new Date(event.date) > currentDate).length
+          });
+          
           setError('');
         } else {
           throw new Error('Invalid response format');
         }
       } catch (err) {
-        console.error('Error fetching upcoming events:', err);
-        setError('Failed to load upcoming events. Please try again later.');
-        setUpcomingEvents([]); // Set empty array in case of error
+        console.error('Error fetching data:', err);
+        setError('Failed to load data. Please try again later.');
+        setUpcomingEvents([]);
+        setCounts({ restaurants: 0, accommodations: 0, events: 0 });
       } finally {
         setLoading(false);
       }
     };
 
-    fetchUpcomingEvents();
+    fetchData();
   }, []);
 
   // Dummy event data to display if API fails
@@ -137,7 +158,7 @@ const Home = () => {
             </div>
             <div className="explore-content">
               <h3 className="explore-title">RESTAURANTS</h3>
-              <p className="explore-count">(67 Restaurants)</p>
+              <p className="explore-count">({counts.restaurants} Restaurant{counts.restaurants !== 1 ? 's' : ''})</p>
               <Link to="/restaurants" className="explore-link">
                 Explore Restaurants
                 <svg xmlns="http://www.w3.org/2000/svg" className="explore-icon" viewBox="0 0 20 20" fill="currentColor">
@@ -158,7 +179,7 @@ const Home = () => {
             </div>
             <div className="explore-content">
               <h3 className="explore-title">APARTMENT</h3>
-              <p className="explore-count">(48 Apartments)</p>
+              <p className="explore-count">({counts.accommodations} Apartment{counts.accommodations !== 1 ? 's' : ''})</p>
               <Link to="/accommodations" className="explore-link">
                 Find Accommodations
                 <svg xmlns="http://www.w3.org/2000/svg" className="explore-icon" viewBox="0 0 20 20" fill="currentColor">
@@ -179,7 +200,7 @@ const Home = () => {
             </div>
             <div className="explore-content">
               <h3 className="explore-title">EVENTS</h3>
-              <p className="explore-count">(23 Upcoming Events)</p>
+              <p className="explore-count">({counts.events} Upcoming Event{counts.events !== 1 ? 's' : ''})</p>
               <Link to="/events" className="explore-link">
                 Discover Events
                 <svg xmlns="http://www.w3.org/2000/svg" className="explore-icon" viewBox="0 0 20 20" fill="currentColor">

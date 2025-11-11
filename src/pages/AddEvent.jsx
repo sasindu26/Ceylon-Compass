@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import VerificationPopup from '../components/VerificationPopup';
+import MapLocationPicker from '../components/MapLocationPicker';
 import '../styles/Forms.css';
 
 // JWT decoder function
@@ -122,8 +123,12 @@ const AddEvent = () => {
   };
 
   const addTicketType = () => {
+    console.log('Add ticket type clicked', ticketType);
+    console.log('Current formData.ticketTypes:', formData.ticketTypes);
+    
     if (!ticketType.name || !ticketType.price || !ticketType.quantity) {
       setError('Please fill in all required ticket type fields (name, price, quantity)');
+      console.log('Validation failed:', { name: ticketType.name, price: ticketType.price, quantity: ticketType.quantity });
       return;
     }
 
@@ -135,10 +140,20 @@ const AddEvent = () => {
       description: ticketType.description
     };
 
-    setFormData(prev => ({
-      ...prev,
-      ticketTypes: [...prev.ticketTypes, newTicket]
-    }));
+    console.log('Adding new ticket:', newTicket);
+
+    // Update formData with new ticket type
+    const updatedTicketTypes = [...formData.ticketTypes, newTicket];
+    console.log('Updated ticket types:', updatedTicketTypes);
+    
+    setFormData(prev => {
+      const updated = {
+        ...prev,
+        ticketTypes: updatedTicketTypes
+      };
+      console.log('New formData:', updated);
+      return updated;
+    });
 
     // Reset ticket type form
     setTicketType({
@@ -148,12 +163,24 @@ const AddEvent = () => {
       description: ''
     });
     setError('');
+    
+    console.log('Ticket type added successfully, total tickets:', updatedTicketTypes.length);
   };
 
   const removeTicketType = (index) => {
     setFormData(prev => ({
       ...prev,
       ticketTypes: prev.ticketTypes.filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleMapLocationSelect = (location) => {
+    console.log('Map location selected:', location);
+    setFormData(prev => ({
+      ...prev,
+      address: location.address,
+      country: location.country || prev.country,
+      city: location.city || prev.city
     }));
   };
 
@@ -363,15 +390,23 @@ const AddEvent = () => {
           </select>
         </div>
 
+        {/* Map Location Picker */}
         <div className="form-group">
-          <label htmlFor="address">Address</label>
+          <label>Select Location on Map</label>
+          <MapLocationPicker onLocationSelect={handleMapLocationSelect} />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="address">Address (Auto-filled from map)</label>
           <input
             type="text"
             id="address"
             name="address"
             value={formData.address}
-            onChange={handleChange}
+            readOnly
             required
+            style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }}
+            placeholder="Click on the map to set location"
           />
         </div>
 
@@ -527,7 +562,7 @@ const AddEvent = () => {
                 {formData.ticketTypes.map((ticket, index) => (
                   <div key={index} className="ticket-item">
                     <div className="ticket-info">
-                      <strong>{ticket.name}</strong> - ${ticket.price} ({ticket.quantity} tickets)
+                      <strong>{ticket.name}</strong> - LKR {ticket.price.toLocaleString()} ({ticket.quantity} tickets)
                       {ticket.description && <span className="ticket-desc"> - {ticket.description}</span>}
                     </div>
                     <button 

@@ -788,3 +788,106 @@ select option:disabled {
   background: #f8d7da;
   color: #721c24;
 } 
+/* Booking Section Styles */
+.booking-section {
+  margin: 32px 0;
+  padding: 24px;
+  background: linear-gradient(135deg, #f8f9ff 0%, #e8f0fe 100%);
+  border-radius: 16px;
+  border: 2px solid #e0e7ff;
+}
+
+.book-now-button-large {
+  width: 100%;
+  padding: 20px 32px;
+  background: linear-gradient(135deg, #0066FF 0%, #0052CC 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 6px 20px rgba(0, 102, 255, 0.3);
+}
+
+.book-now-button-large:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 102, 255, 0.4);
+}
+
+.book-now-button-large span:first-child {
+  font-size: 20px;
+}
+
+.available-count {
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+.success-banner {
+  background: #10b981;
+  color: white;
+  padding: 16px 24px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  animation: slideDown 0.5s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Update existing ticket availability styles */
+.ticket-availability .available {
+  color: #10b981;
+  font-weight: 600;
+}
+
+.ticket-availability .sold-out {
+  color: #ef4444;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Clickable Address Styles */
+.metadata-item-address {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.address-link {
+  color: #0066FF;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.address-link:hover {
+  color: #0052CC;
+  transform: translateX(2px);
+}
+
+.address-link:active {
+  transform: scale(0.98);
+}

@@ -22,6 +22,9 @@ async function createAdminUser() {
             username: 'admin',
             email: 'admin@example.com',
             password: 'admin123', // This will be hashed by the pre-save middleware
+            firstName: 'Admin',
+            lastName: 'User',
+            title: 'Mr.',
             country: 'Sri Lanka',
             city: 'Colombo',
             role: 'admin'

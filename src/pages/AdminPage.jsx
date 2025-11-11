@@ -475,7 +475,7 @@ const AdminPage = () => {
               { label: 'Date', value: new Date(selectedRequest.date).toLocaleDateString() },
               { label: 'Time', value: selectedRequest.time },
               { label: 'Category', value: selectedRequest.category },
-              { label: 'Price', value: `$${selectedRequest.price}` },
+              { label: 'Price', value: `LKR ${selectedRequest.price?.toLocaleString() || 0}` },
               { label: 'Capacity', value: `${selectedRequest.capacity} people` }
             ],
             locationFields: [
@@ -536,7 +536,7 @@ const AdminPage = () => {
             mainFields: [
               { label: 'Description', value: selectedRequest.description },
               { label: 'Type', value: selectedRequest.type },
-              { label: 'Price', value: selectedRequest.price ? `$${selectedRequest.price}` : '' },
+              { label: 'Price', value: selectedRequest.price ? `LKR ${selectedRequest.price.toLocaleString()}` : '' },
               { label: 'Capacity', value: selectedRequest.capacity }
             ],
             locationFields: locationFields,
@@ -693,7 +693,7 @@ const AdminPage = () => {
               <div className="details-section">
                 <h4>Additional Information</h4>
                 <p><strong>Category:</strong> {selectedItem.category}</p>
-                <p><strong>Price:</strong> {selectedItem.price ? `$${selectedItem.price}` : 'Free'}</p>
+                <p><strong>Price:</strong> {selectedItem.price ? `LKR ${selectedItem.price.toLocaleString()}` : 'Free'}</p>
                 <p><strong>Website:</strong> {selectedItem.website || 'N/A'}</p>
                 <p><strong>Contact:</strong> {selectedItem.contactInfo || 'N/A'}</p>
                 <p><strong>Status:</strong> <span className={`status-${selectedItem.status}`}>{selectedItem.status}</span></p>

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation as useLocationContext } from '../context/LocationContext';
+import SearchableSelect from './SearchableSelect';
 import '../styles/Listings.css';
 
 const LocationFilter = ({ onFilterChange, initialFilters }) => {
@@ -87,36 +88,28 @@ const LocationFilter = ({ onFilterChange, initialFilters }) => {
     <div className="filters-container">
       <div className="filter-group">
         <label htmlFor="country">Country</label>
-        <select
-          id="country"
+        <SearchableSelect
+          options={countries}
           value={filters.country}
           onChange={handleCountryChange}
-          disabled={filters.showAll || loading}
-        >
-          <option value="">Select Country</option>
-          {countries.map((country) => (
-            <option key={country} value={country}>
-              {country}
-            </option>
-          ))}
-        </select>
+          placeholder="Select Country"
+          name="country"
+          isDisabled={filters.showAll || loading}
+          isSearchable={true}
+        />
       </div>
       
       <div className="filter-group">
         <label htmlFor="city">City</label>
-        <select
-          id="city"
+        <SearchableSelect
+          options={cities}
           value={filters.city}
           onChange={handleCityChange}
-          disabled={!filters.country || filters.showAll || loading}
-        >
-          <option value="">Select City</option>
-          {cities.map((city) => (
-            <option key={city} value={city}>
-              {city}
-            </option>
-          ))}
-        </select>
+          placeholder="Select City"
+          name="city"
+          isDisabled={!filters.country || filters.showAll || loading}
+          isSearchable={true}
+        />
       </div>
       
       <div className="toggle-container">

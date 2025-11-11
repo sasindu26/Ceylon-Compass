@@ -8,6 +8,21 @@ const userSchema = new mongoose.Schema({
     unique: true,
     trim: true
   },
+  title: {
+    type: String,
+    enum: ['Mr.', 'Mrs.', 'Ms.', 'Dr.', 'Prof.'],
+    default: 'Mr.'
+  },
+  firstName: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  lastName: {
+    type: String,
+    required: true,
+    trim: true
+  },
   email: {
     type: String,
     required: true,
@@ -29,6 +44,26 @@ const userSchema = new mongoose.Schema({
   profilePhoto: {
     type: String,
     default: ''
+  },
+  phone: {
+    type: String,
+    default: ''
+  },
+  location: {
+    address: {
+      type: String,
+      default: ''
+    },
+    coordinates: {
+      latitude: {
+        type: Number,
+        default: null
+      },
+      longitude: {
+        type: Number,
+        default: null
+      }
+    }
   },
   role: {
     type: String,

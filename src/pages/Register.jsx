@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
+import SearchableSelect from '../components/SearchableSelect';
 import '../styles/Auth.css';
 
 const Register = () => {
   const [formData, setFormData] = useState({
     username: '',
+    title: 'Mr.',
+    firstName: '',
+    lastName: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -93,6 +97,16 @@ const Register = () => {
     
     if (!formData.username) {
       newFieldErrors.username = 'Username is required';
+      hasError = true;
+    }
+    
+    if (!formData.firstName) {
+      newFieldErrors.firstName = 'First name is required';
+      hasError = true;
+    }
+    
+    if (!formData.lastName) {
+      newFieldErrors.lastName = 'Last name is required';
       hasError = true;
     }
     
@@ -191,14 +205,14 @@ const Register = () => {
         
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
-            <label htmlFor="username">Username</label>
+            <label htmlFor="username">Username *</label>
             <input
               type="text"
               id="username"
               name="username"
               value={formData.username}
               onChange={handleChange}
-              placeholder="Choose a username"
+              placeholder="Choose a unique username"
               disabled={loading}
               className={fieldErrors.username ? 'error-input' : ''}
             />
@@ -206,7 +220,54 @@ const Register = () => {
           </div>
           
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label htmlFor="title">Title</label>
+            <select
+              id="title"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              disabled={loading}
+            >
+              <option value="Mr.">Mr.</option>
+              <option value="Mrs.">Mrs.</option>
+              <option value="Ms.">Ms.</option>
+              <option value="Dr.">Dr.</option>
+              <option value="Prof.">Prof.</option>
+            </select>
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="firstName">First Name *</label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              placeholder="Enter your first name"
+              disabled={loading}
+              className={fieldErrors.firstName ? 'error-input' : ''}
+            />
+            {fieldErrors.firstName && <div className="field-error">{fieldErrors.firstName}</div>}
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="lastName">Last Name *</label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              placeholder="Enter your last name"
+              disabled={loading}
+              className={fieldErrors.lastName ? 'error-input' : ''}
+            />
+            {fieldErrors.lastName && <div className="field-error">{fieldErrors.lastName}</div>}
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="email">Email *</label>
             <input
               type="email"
               id="email"
@@ -252,41 +313,29 @@ const Register = () => {
           
           <div className="form-group">
             <label htmlFor="country">Country</label>
-            <select
-              id="country"
-              name="country"
+            <SearchableSelect
+              options={countries}
               value={formData.country}
               onChange={handleChange}
-              disabled={loading}
-              className={fieldErrors.country ? 'error-input' : ''}
-            >
-              <option value="">Select Country</option>
-              {countries.map(country => (
-                <option key={country} value={country}>
-                  {country}
-                </option>
-              ))}
-            </select>
+              placeholder="Select Country"
+              name="country"
+              isDisabled={loading}
+              isSearchable={true}
+            />
             {fieldErrors.country && <div className="field-error">{fieldErrors.country}</div>}
           </div>
           
           <div className="form-group">
             <label htmlFor="city">City</label>
-            <select
-              id="city"
-              name="city"
+            <SearchableSelect
+              options={cities}
               value={formData.city}
               onChange={handleChange}
-              disabled={!formData.country || loading}
-              className={fieldErrors.city ? 'error-input' : ''}
-            >
-              <option value="">Select City</option>
-              {cities.map(city => (
-                <option key={city} value={city}>
-                  {city}
-                </option>
-              ))}
-            </select>
+              placeholder="Select City"
+              name="city"
+              isDisabled={!formData.country || loading}
+              isSearchable={true}
+            />
             {fieldErrors.city && <div className="field-error">{fieldErrors.city}</div>}
           </div>
           

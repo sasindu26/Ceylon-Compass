@@ -64,6 +64,18 @@ const RestaurantDetails = () => {
     ? websiteUrl 
     : websiteUrl ? `https://${websiteUrl}` : '';
 
+  const openInMaps = () => {
+    if (!restaurant.address) return;
+    
+    if (restaurant.location?.coordinates?.lat && restaurant.location?.coordinates?.lng) {
+      const { lat, lng } = restaurant.location.coordinates;
+      window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
+    } else {
+      const addressQuery = encodeURIComponent(restaurant.address);
+      window.open(`https://www.google.com/maps/search/?api=1&query=${addressQuery}`, '_blank');
+    }
+  };
+
   return (
     <div className="simplified-details-container">
       <h1 className="event-title">{restaurant.name}</h1>
@@ -86,8 +98,11 @@ const RestaurantDetails = () => {
             <div className="metadata-item">
               <strong>Opening Hours:</strong> {restaurant.openingHours}
             </div>
-            <div className="metadata-item">
-              <strong>Address:</strong> {restaurant.address || 'Not specified'}
+            <div className="metadata-item metadata-item-address">
+              <strong>Address:</strong>
+              <span className="address-link" onClick={openInMaps} title="Click to open in Google Maps">
+                📍 {restaurant.address || 'Not specified'}
+              </span>
             </div>
           </div>
           

@@ -60,6 +60,18 @@ const AccommodationDetails = () => {
     return <div className="error-message">Accommodation not found</div>;
   }
 
+  const openInMaps = () => {
+    if (!accommodation.address) return;
+    
+    if (accommodation.location?.coordinates?.lat && accommodation.location?.coordinates?.lng) {
+      const { lat, lng } = accommodation.location.coordinates;
+      window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
+    } else {
+      const addressQuery = encodeURIComponent(accommodation.address);
+      window.open(`https://www.google.com/maps/search/?api=1&query=${addressQuery}`, '_blank');
+    }
+  };
+
   return (
     <div className="simplified-details-container">
       <h1 className="event-title">{accommodation.name}</h1>
@@ -83,13 +95,16 @@ const AccommodationDetails = () => {
           
           <div className="event-metadata">
             <div className="metadata-item">
-              <strong>Price:</strong> ${accommodation.price} per night
+              <strong>Price:</strong> LKR {accommodation.price.toLocaleString()} per night
             </div>
             <div className="metadata-item">
               <strong>Type:</strong> {accommodation.type || 'Not specified'}
             </div>
-            <div className="metadata-item">
-              <strong>Address:</strong> {accommodation.address || 'Not specified'}
+            <div className="metadata-item metadata-item-address">
+              <strong>Address:</strong>
+              <span className="address-link" onClick={openInMaps} title="Click to open in Google Maps">
+                📍 {accommodation.address || 'Not specified'}
+              </span>
             </div>
             {accommodation.amenities && accommodation.amenities.length > 0 && (
               <div className="metadata-item">

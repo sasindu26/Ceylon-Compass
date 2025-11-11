@@ -321,7 +321,7 @@
 .form-group textarea {
   padding: 0.75rem 1rem;
   border-radius: var(--radius-md);
-  border: 1px solid var(--border);
+  border: 2px solid var(--primary);
   font-size: 1rem;
   width: 100%;
   color: var(--text-dark);
@@ -333,8 +333,20 @@
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: var(--primary);
+  border-color: var(--primary-dark);
   box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+/* Error state - red border ONLY for invalid inputs that have been filled */
+.form-group input.error,
+.form-group textarea.error {
+  border-color: var(--error);
+}
+
+.form-group input.error:focus,
+.form-group textarea.error:focus {
+  border-color: var(--error);
+  box-shadow: 0 0 0 3px var(--error-light);
 }
 
 .form-group textarea {

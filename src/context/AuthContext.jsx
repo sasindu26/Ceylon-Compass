@@ -165,6 +165,40 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const loginWithToken = async (token) => {
+    try {
+      setError(null);
+      
+      // Validate token
+      if (!token || !isTokenValid(token)) {
+        throw new Error('Invalid token');
+      }
+
+      // Store token
+      localStorage.setItem('token', token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      
+      // Fetch user data
+      const response = await axios.get('/auth/me');
+      
+      if (response.data && response.data.user) {
+        const userData = response.data.user;
+        localStorage.setItem('user', JSON.stringify(userData));
+        setUser(userData);
+        return { success: true, user: userData };
+      }
+      
+      throw new Error('Failed to fetch user data');
+    } catch (error) {
+      console.error('Login with token error:', error);
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      delete axios.defaults.headers.common['Authorization'];
+      setError('Failed to complete Google sign-in');
+      return { success: false, error: 'Failed to complete Google sign-in' };
+    }
+  };
+
   const register = async (userData) => {
     try {
       setError(null);
@@ -235,8 +269,8 @@ export const AuthProvider = ({ children }) => {
       const token = localStorage.getItem('token');
       if (!token) return;
 
-      // Fix the URL to use proper axios configuration
-      const response = await axios.get('/api/notifications/unread-count', {
+      // Fix the URL - axios already has baseURL set
+      const response = await axios.get('/notifications/unread-count', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -294,6 +328,7 @@ export const AuthProvider = ({ children }) => {
     error,
     register,
     login,
+    loginWithToken,
     logout,
     updateLocation,
     isAuthenticated: !!user,

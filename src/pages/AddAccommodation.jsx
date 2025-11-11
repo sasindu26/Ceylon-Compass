@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useLocation } from '../context/LocationContext';
 import VerificationPopup from '../components/VerificationPopup';
+import MapLocationPicker from '../components/MapLocationPicker';
 import '../styles/Forms.css';
 
 const AddAccommodation = () => {
@@ -125,6 +126,19 @@ const AddAccommodation = () => {
       amenities: checked
         ? [...prev.amenities, value]
         : prev.amenities.filter(amenity => amenity !== value)
+    }));
+  };
+
+  const handleMapLocationSelect = (location) => {
+    console.log('Map location selected:', location);
+    setFormData(prev => ({
+      ...prev,
+      location: {
+        ...prev.location,
+        address: location.address
+      },
+      country: location.country || prev.country,
+      city: location.city || prev.city
     }));
   };
 
@@ -414,15 +428,23 @@ const AddAccommodation = () => {
           </select>
         </div>
 
+        {/* Map Location Picker */}
         <div className="form-group">
-          <label htmlFor="location.address">Address</label>
+          <label>Select Location on Map</label>
+          <MapLocationPicker onLocationSelect={handleMapLocationSelect} />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="location.address">Address (Auto-filled from map)</label>
           <input
             type="text"
             id="location.address"
             name="location.address"
             value={formData.location.address}
-            onChange={handleChange}
+            readOnly
             required
+            style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }}
+            placeholder="Click on the map to set location"
           />
         </div>
 

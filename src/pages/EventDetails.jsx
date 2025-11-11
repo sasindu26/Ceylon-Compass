@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
+import BookingModal from '../components/BookingModal';
 import '../styles/Details.css';
 
 const EventDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showBookingModal, setShowBookingModal] = useState(false);
+  const [bookingSuccess, setBookingSuccess] = useState(false);
 
   useEffect(() => {
     fetchEvent();
@@ -29,6 +35,49 @@ const EventDetails = () => {
     }
   };
 
+  const handleBookNow = () => {
+    if (!user) {
+      alert('Please login to book tickets');
+      navigate('/login');
+      return;
+    }
+    setShowBookingModal(true);
+  };
+
+  const handleBookingSuccess = (booking) => {
+    setShowBookingModal(false);
+    setBookingSuccess(true);
+    // Refresh event data to show updated ticket availability
+    fetchEvent();
+    
+    setTimeout(() => {
+      alert(`Booking successful! Confirmation sent to ${booking.userDetails.email}`);
+      setBookingSuccess(false);
+    }, 500);
+  };
+
+  const getTotalAvailable = () => {
+    if (event.ticketTypes && event.ticketTypes.length > 0) {
+      return event.ticketTypes.reduce((sum, t) => sum + t.available, 0);
+    }
+    return event.capacity || 0;
+  };
+
+  const openInMaps = () => {
+    if (!event.address) return;
+    
+    // If event has GPS coordinates, use them for more accurate location
+    if (event.location?.coordinates?.lat && event.location?.coordinates?.lng) {
+      const { lat, lng } = event.location.coordinates;
+      // Open Google Maps with coordinates
+      window.open(`https://www.google.com/maps?q=${lat},${lng}`, '_blank');
+    } else {
+      // Otherwise, use address search
+      const addressQuery = encodeURIComponent(event.address);
+      window.open(`https://www.google.com/maps/search/?api=1&query=${addressQuery}`, '_blank');
+    }
+  };
+
   if (loading) {
     return <div className="loading">Loading event details...</div>;
   }
@@ -46,6 +95,12 @@ const EventDetails = () => {
       <h1 className="event-title">{event.title}</h1>
       <h2 className="event-location">{event.city}, {event.country}</h2>
       
+      {bookingSuccess && (
+        <div className="success-banner">
+          ✓ Booking successful! Check your email for confirmation.
+        </div>
+      )}
+      
       <div className="event-content">
         <div className="event-image-container">
           <img src={event.image} alt={event.title} className="event-image" />
@@ -54,6 +109,16 @@ const EventDetails = () => {
         <div className="event-info">
           <div className="event-description">
             <p>{event.description}</p>
+          </div>
+          
+          {/* Book Now Button */}
+          <div className="booking-section">
+            <button className="book-now-button-large" onClick={handleBookNow}>
+              <span>🎫 Book Tickets Now</span>
+              <span className="available-count">
+                {getTotalAvailable()} tickets available
+              </span>
+            </button>
           </div>
           
           <div className="event-metadata">
@@ -66,8 +131,11 @@ const EventDetails = () => {
             <div className="metadata-item">
               <strong>Category:</strong> {event.category}
             </div>
-            <div className="metadata-item">
-              <strong>Address:</strong> {event.address || 'Not specified'}
+            <div className="metadata-item metadata-item-address">
+              <strong>Address:</strong> 
+              <span className="address-link" onClick={openInMaps} title="Click to open in Google Maps">
+                📍 {event.address || 'Not specified'}
+              </span>
             </div>
             {event.ticketTypes && event.ticketTypes.length > 0 ? (
               <div className="ticket-types-section">
@@ -77,7 +145,7 @@ const EventDetails = () => {
                     <div key={index} className="ticket-type-card">
                       <div className="ticket-type-header">
                         <h4>{ticket.name}</h4>
-                        <span className="ticket-price">${ticket.price}</span>
+                        <span className="ticket-price">LKR {ticket.price.toLocaleString()}</span>
                       </div>
                       {ticket.description && (
                         <p className="ticket-description">{ticket.description}</p>
@@ -95,7 +163,7 @@ const EventDetails = () => {
               </div>
             ) : event.price > 0 && (
               <div className="metadata-item">
-                <strong>Price:</strong> ${event.price}
+                <strong>Price:</strong> LKR {event.price.toLocaleString()}
               </div>
             )}
           </div>
@@ -116,6 +184,15 @@ const EventDetails = () => {
           </div>
         </div>
       </div>
+      
+      {/* Booking Modal */}
+      {showBookingModal && (
+        <BookingModal
+          event={event}
+          onClose={() => setShowBookingModal(false)}
+          onSuccess={handleBookingSuccess}
+        />
+      )}
     </div>
   );
 };

@@ -6,11 +6,12 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const { auth } = require('../middleware/auth');
 const { sendPasswordResetEmail } = require('../config/email');
+const passport = require('../config/passport');
 
 // Register a new user
 router.post('/register', async (req, res) => {
   try {
-    const { username, email, password, country, city } = req.body;
+    const { username, title, firstName, lastName, email, password, country, city } = req.body;
     
     // Check if username already exists
     const existingUsername = await User.findOne({ username });
@@ -33,6 +34,9 @@ router.post('/register', async (req, res) => {
     // Create new user
     const user = new User({
       username,
+      title: title || 'Mr.',
+      firstName,
+      lastName,
       email,
       password,
       country,
@@ -49,6 +53,9 @@ router.post('/register', async (req, res) => {
       user: {
         id: user._id,
         username: user.username,
+        title: user.title,
+        firstName: user.firstName,
+        lastName: user.lastName,
         email: user.email,
         country: user.country,
         city: user.city,
@@ -150,14 +157,50 @@ router.get('/profile', auth, async (req, res) => {
     res.json({
       id: user._id,
       username: user.username,
+      title: user.title,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       country: user.country,
       city: user.city,
       profilePhoto: user.profilePhoto,
+      phone: user.phone,
+      location: user.location,
       role: user.role
     });
   } catch (error) {
     console.error('Profile error:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Get current user - Protected route (for OAuth callback)
+router.get('/me', auth, async (req, res) => {
+  try {
+    const user = req.user;
+    
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    
+    res.json({
+      user: {
+        id: user._id,
+        username: user.username,
+        title: user.title,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        country: user.country,
+        city: user.city,
+        profilePhoto: user.profilePhoto,
+        phone: user.phone,
+        location: user.location,
+        role: user.role
+      }
+    });
+  } catch (error) {
+    console.error('Get user error:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
@@ -218,27 +261,59 @@ router.put('/profile/password', auth, async (req, res) => {
 router.put('/profile', auth, async (req, res) => {
   try {
     const user = req.user;
-    const { country, city, email, profilePhoto } = req.body;
+    const { username, title, firstName, lastName, country, city, email, profilePhoto, phone, location } = req.body;
     
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
     
+    // Check if username is being changed and if the new username is already taken
+    if (username && username !== user.username) {
+      const existingUser = await User.findOne({ username });
+      if (existingUser) {
+        return res.status(400).json({ 
+          message: 'Username is already taken. Please choose another one.',
+          field: 'username'
+        });
+      }
+      user.username = username;
+    }
+    
     // Update fields
+    if (title) user.title = title;
+    if (firstName) user.firstName = firstName;
+    if (lastName) user.lastName = lastName;
     if (country) user.country = country;
     if (city) user.city = city;
     if (email) user.email = email;
     if (profilePhoto !== undefined) user.profilePhoto = profilePhoto;
+    if (phone !== undefined) user.phone = phone;
+    if (location) {
+      if (location.address !== undefined) user.location.address = location.address;
+      if (location.coordinates) {
+        if (location.coordinates.latitude !== undefined) {
+          user.location.coordinates.latitude = location.coordinates.latitude;
+        }
+        if (location.coordinates.longitude !== undefined) {
+          user.location.coordinates.longitude = location.coordinates.longitude;
+        }
+      }
+    }
     
     await user.save();
     
     res.json({
       id: user._id,
       username: user.username,
+      title: user.title,
+      firstName: user.firstName,
+      lastName: user.lastName,
       email: user.email,
       country: user.country,
       city: user.city,
       profilePhoto: user.profilePhoto,
+      phone: user.phone,
+      location: user.location,
       role: user.role
     });
   } catch (error) {
@@ -376,5 +451,36 @@ router.post('/google', async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
+
+// Google OAuth Routes
+// Initiate Google OAuth
+router.get('/google', passport.authenticate('google', { 
+  scope: ['profile', 'email'],
+  session: false 
+}));
+
+// Google OAuth Callback
+router.get('/google/callback',
+  passport.authenticate('google', { 
+    session: false,
+    failureRedirect: `${process.env.FRONTEND_URL}/login?error=auth_failed`
+  }),
+  async (req, res) => {
+    try {
+      // Generate JWT token
+      const token = jwt.sign(
+        { userId: req.user._id },
+        process.env.JWT_SECRET,
+        { expiresIn: '7d' }
+      );
+
+      // Redirect to frontend with token
+      res.redirect(`${process.env.FRONTEND_URL}/login?token=${token}`);
+    } catch (error) {
+      console.error('Google callback error:', error);
+      res.redirect(`${process.env.FRONTEND_URL}/login?error=token_generation_failed`);
+    }
+  }
+);
 
 module.exports = router; 

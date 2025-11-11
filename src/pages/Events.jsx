@@ -4,7 +4,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useLocation as useLocationContext } from '../context/LocationContext';
 import LocationFilter from '../components/LocationFilter';
+import EventCard from '../components/EventCard';
 import '../styles/Listings.css';
+import '../styles/EventCard.css';
 
 const Events = () => {
   const navigate = useNavigate();
@@ -18,31 +20,37 @@ const Events = () => {
     city: '',
     showAll: false
   });
-  const [initialLoad, setInitialLoad] = useState(true);
+  const [filtersInitialized, setFiltersInitialized] = useState(false);
 
   // Set initial filters from user data when component mounts
   useEffect(() => {
-    if (user && initialLoad) {
-      const newFilters = {
-        country: user.country || '',
-        city: user.city || '',
-        showAll: false
-      };
-      console.log('Setting initial user location filters for events:', newFilters);
-      setFilters(newFilters);
-      setInitialLoad(false);
-    } else if (!user && initialLoad) {
-      // If no user is logged in, show all events
-      const newFilters = {
-        country: '',
-        city: '',
-        showAll: true
-      };
-      console.log('No user detected, showing all events');
-      setFilters(newFilters);
-      setInitialLoad(false);
+    if (!filtersInitialized) {
+      if (user) {
+        const newFilters = {
+          country: user.country || '',
+          city: '', // Don't auto-set city, let user choose
+          showAll: false
+        };
+        console.log('==== EVENTS PAGE INITIALIZATION ====');
+        console.log('User object:', user);
+        console.log('User country:', user.country);
+        console.log('User city:', user.city);
+        console.log('Setting initial user location filters for events:', newFilters);
+        setFilters(newFilters);
+      } else {
+        // If no user is logged in, show all events
+        const newFilters = {
+          country: '',
+          city: '',
+          showAll: true
+        };
+        console.log('==== EVENTS PAGE INITIALIZATION ====');
+        console.log('No user detected, showing all events');
+        setFilters(newFilters);
+      }
+      setFiltersInitialized(true);
     }
-  }, [user, initialLoad]);
+  }, [user, filtersInitialized]);
 
   // Fetch events when filters change or component mounts
   useEffect(() => {
@@ -119,24 +127,14 @@ const Events = () => {
       }
     };
 
-    // Only fetch if we have initialized the filters
-    if (!initialLoad) {
+    // Fetch events whenever filters change
+    if (filtersInitialized) {
       fetchEvents();
     }
-  }, [filters, initialLoad]);
+  }, [filters, filtersInitialized]);
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
-  };
-
-  const handleAddEvent = () => {
-    if (isAuthenticated) {
-      navigate('/events/add');
-    } else {
-      if (window.confirm('You need to log in first to add a new event. Would you like to log in now?')) {
-        navigate('/login');
-      }
-    }
   };
 
   return (
@@ -153,15 +151,6 @@ const Events = () => {
           onFilterChange={handleFilterChange}
           initialFilters={filters}
         />
-        
-        <div className="sort-and-add-container">
-          <div className="add-event-container">
-            <button onClick={handleAddEvent} className="add-new-event">
-              <i className="fas fa-plus"></i>
-              Add New Event
-            </button>
-          </div>
-        </div>
       </div>
       
       {error && <div className="error-message">{error}</div>}
@@ -173,30 +162,22 @@ const Events = () => {
           No events found. Try changing your filters or location.
         </div>
       ) : (
-        <div className="listings-grid">
+        <div className="events-grid-modern">
           {events.map((event) => (
-            <Link
-              to={`/events/${event._id}`}
+            <EventCard
               key={event._id}
-              className="listing-card"
-            >
-              <div className="card-image">
-                <img src={event.image} alt={event.title} />
-              </div>
-              <div className="card-content">
-                <h3 className="card-title">{event.title}</h3>
-                <p className="card-location">
-                  {event.city}, {event.country}
-                </p>
-                <p className="card-category">{event.category}</p>
-                <p className="card-date">
-                  {new Date(event.date).toLocaleDateString()} at {event.time}
-                </p>
-                <p className="card-price">
-                  {event.price > 0 ? `$${event.price}` : 'Free'}
-                </p>
-              </div>
-            </Link>
+              id={event._id}
+              title={event.title}
+              image={event.image}
+              location={`${event.city}, ${event.country}`}
+              category={event.category}
+              date={event.date}
+              time={event.time}
+              price={event.price}
+              ticketTypes={event.ticketTypes}
+              capacity={event.capacity}
+              showBookButton={true}
+            />
           ))}
         </div>
       )}

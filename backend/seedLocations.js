@@ -5,7 +5,17 @@ const Location = require('./models/Location');
 const locationsData = [
   {
     country: 'Sri Lanka',
-    cities: ['Colombo', 'Kandy', 'Galle', 'Jaffna', 'Anuradhapura', 'Negombo', 'Matara', 'Trincomalee', 'Batticaloa', 'Ratnapura', 'Kurunegala', 'Badulla', 'Mannar', 'Vavuniya', 'Hambantota']
+    cities: [
+      'Colombo', 'Kandy', 'Galle', 'Jaffna', 'Anuradhapura', 
+      'Negombo', 'Matara', 'Trincomalee', 'Batticaloa', 'Ratnapura', 
+      'Kurunegala', 'Badulla', 'Mannar', 'Vavuniya', 'Hambantota',
+      'Nuwara Eliya', 'Kalutara', 'Gampaha', 'Ampara', 'Polonnaruwa',
+      'Chilaw', 'Kegalle', 'Matale', 'Puttalam', 'Monaragala',
+      'Avissawella', 'Bandarawela', 'Bentota', 'Dambulla', 'Ella',
+      'Hikkaduwa', 'Tangalle', 'Mirissa', 'Unawatuna', 'Arugam Bay',
+      'Sigiriya', 'Habarana', 'Kataragama', 'Beruwala', 'Weligama',
+      'Ambalangoda', 'Tissamaharama', 'Embilipitiya', 'Hatton', 'Wellawaya'
+    ]
   },
   {
     country: 'India',
@@ -34,6 +44,26 @@ const locationsData = [
   {
     country: 'United Arab Emirates',
     cities: ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ajman', 'Ras Al Khaimah', 'Fujairah', 'Umm Al Quwain', 'Al Ain', 'Khor Fakkan', 'Dibba Al-Fujairah', 'Kalba', 'Dhaid', 'Jebel Ali', 'Hatta', 'Ruwais']
+  },
+  {
+    country: 'United States',
+    cities: ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia', 'San Antonio', 'San Diego', 'Dallas', 'San Jose', 'Austin', 'Jacksonville', 'Fort Worth', 'Columbus', 'San Francisco', 'Charlotte', 'Indianapolis', 'Seattle', 'Denver', 'Washington DC', 'Boston', 'Nashville', 'Las Vegas', 'Portland', 'Miami']
+  },
+  {
+    country: 'Canada',
+    cities: ['Toronto', 'Montreal', 'Vancouver', 'Calgary', 'Edmonton', 'Ottawa', 'Winnipeg', 'Quebec City', 'Hamilton', 'Kitchener', 'London', 'Victoria', 'Halifax', 'Oshawa', 'Windsor', 'Saskatoon', 'Regina', 'Sherbrooke', 'St. Catharines', 'Kelowna']
+  },
+  {
+    country: 'Singapore',
+    cities: ['Singapore City', 'Jurong', 'Woodlands', 'Tampines', 'Bedok', 'Hougang', 'Yishun', 'Sengkang', 'Punggol', 'Bukit Batok', 'Choa Chu Kang', 'Ang Mo Kio', 'Toa Payoh', 'Queenstown', 'Bishan']
+  },
+  {
+    country: 'New Zealand',
+    cities: ['Auckland', 'Wellington', 'Christchurch', 'Hamilton', 'Tauranga', 'Dunedin', 'Palmerston North', 'Napier', 'Hastings', 'Nelson', 'Rotorua', 'New Plymouth', 'Whangarei', 'Invercargill', 'Queenstown', 'Gisborne', 'Timaru', 'Blenheim', 'Wanaka', 'Taupo']
+  },
+  {
+    country: 'Germany',
+    cities: ['Berlin', 'Hamburg', 'Munich', 'Cologne', 'Frankfurt', 'Stuttgart', 'Düsseldorf', 'Dortmund', 'Essen', 'Leipzig', 'Bremen', 'Dresden', 'Hanover', 'Nuremberg', 'Duisburg', 'Bochum', 'Wuppertal', 'Bonn', 'Bielefeld', 'Mannheim']
   }
 ];
 

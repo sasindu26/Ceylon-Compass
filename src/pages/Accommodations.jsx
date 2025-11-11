@@ -18,31 +18,37 @@ const Accommodations = () => {
     city: '',
     showAll: false
   });
-  const [initialLoad, setInitialLoad] = useState(true);
+  const [filtersInitialized, setFiltersInitialized] = useState(false);
 
   // Set initial filters from user data when component mounts
   useEffect(() => {
-    if (user && initialLoad) {
-      const newFilters = {
-        country: user.country || '',
-        city: user.city || '',
-        showAll: false
-      };
-      console.log('Setting initial user location filters for accommodations:', newFilters);
-      setFilters(newFilters);
-      setInitialLoad(false);
-    } else if (!user && initialLoad) {
-      // If no user is logged in, show all accommodations
-      const newFilters = {
-        country: '',
-        city: '',
-        showAll: true
-      };
-      console.log('No user detected, showing all accommodations');
-      setFilters(newFilters);
-      setInitialLoad(false);
+    if (!filtersInitialized) {
+      if (user) {
+        const newFilters = {
+          country: user.country || '',
+          city: '', // Don't auto-set city, let user choose
+          showAll: false
+        };
+        console.log('==== ACCOMMODATIONS PAGE INITIALIZATION ====');
+        console.log('User object:', user);
+        console.log('User country:', user.country);
+        console.log('User city:', user.city);
+        console.log('Setting initial user location filters for accommodations:', newFilters);
+        setFilters(newFilters);
+      } else {
+        // If no user is logged in, show all accommodations
+        const newFilters = {
+          country: '',
+          city: '',
+          showAll: true
+        };
+        console.log('==== ACCOMMODATIONS PAGE INITIALIZATION ====');
+        console.log('No user detected, showing all accommodations');
+        setFilters(newFilters);
+      }
+      setFiltersInitialized(true);
     }
-  }, [user, initialLoad]);
+  }, [user, filtersInitialized]);
 
   // Fetch accommodations when filters change or component mounts
   useEffect(() => {
@@ -118,24 +124,14 @@ const Accommodations = () => {
       }
     };
 
-    // Only fetch if we have initialized the filters
-    if (!initialLoad) {
+    // Fetch accommodations whenever filters are initialized or changed
+    if (filtersInitialized) {
       fetchAccommodations();
     }
-  }, [filters, initialLoad]);
+  }, [filters, filtersInitialized]);
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
-  };
-
-  const handleAddAccommodation = () => {
-    if (isAuthenticated) {
-      navigate('/accommodations/add');
-    } else {
-      if (window.confirm('You need to log in first to add a new accommodation. Would you like to log in now?')) {
-        navigate('/login');
-      }
-    }
   };
 
   return (
@@ -149,13 +145,6 @@ const Accommodations = () => {
           onFilterChange={handleFilterChange}
           initialFilters={filters}
         />
-        
-        <div className="add-event-container">
-          <button onClick={handleAddAccommodation} className="add-new-event">
-            <i className="fas fa-plus"></i>
-            Add New Accommodation
-          </button>
-        </div>
       </div>
       
       {error && <div className="error-message">{error}</div>}

@@ -9,6 +9,8 @@ const Contact = () => {
     subject: '',
     message: ''
   });
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
@@ -19,6 +21,45 @@ const Contact = () => {
       ...prev,
       [name]: value
     }));
+    
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    setTouched(prev => ({
+      ...prev,
+      [name]: true
+    }));
+
+    // Validate on blur
+    validateField(name, value);
+  };
+
+  const validateField = (name, value) => {
+    let error = '';
+
+    if (!value.trim()) {
+      error = 'This field is required';
+    } else if (name === 'email') {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(value)) {
+        error = 'Please enter a valid email';
+      }
+    }
+
+    setErrors(prev => ({
+      ...prev,
+      [name]: error
+    }));
+
+    return !error;
   };
 
   const handleSubmit = async (e) => {
@@ -26,6 +67,17 @@ const Contact = () => {
     setLoading(true);
     setError('');
     setSuccess(false);
+
+    // Validate all fields
+    const isNameValid = validateField('name', formData.name);
+    const isEmailValid = validateField('email', formData.email);
+    const isSubjectValid = validateField('subject', formData.subject);
+    const isMessageValid = validateField('message', formData.message);
+
+    if (!isNameValid || !isEmailValid || !isSubjectValid || !isMessageValid) {
+      setLoading(false);
+      return;
+    }
 
     try {
       await axios.post('http://localhost:5000/api/contact', formData);
@@ -36,6 +88,8 @@ const Contact = () => {
         subject: '',
         message: ''
       });
+      setErrors({});
+      setTouched({});
     } catch (err) {
       setError('Failed to send message. Please try again later.');
     } finally {
@@ -117,6 +171,8 @@ const Contact = () => {
                 name="name"
                 value={formData.name}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                className={touched.name && errors.name ? 'error' : ''}
                 required
               />
             </div>
@@ -129,6 +185,8 @@ const Contact = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                className={touched.email && errors.email ? 'error' : ''}
                 required
               />
             </div>
@@ -141,6 +199,8 @@ const Contact = () => {
                 name="subject"
                 value={formData.subject}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                className={touched.subject && errors.subject ? 'error' : ''}
                 required
               />
             </div>
@@ -152,6 +212,8 @@ const Contact = () => {
                 name="message"
                 value={formData.message}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                className={touched.message && errors.message ? 'error' : ''}
                 required
               />
             </div>

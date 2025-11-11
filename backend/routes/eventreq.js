@@ -170,9 +170,13 @@ router.post("/:id/accept", auth, async (req, res) => {
       category: eventReq.category,
       price: eventReq.price || 0,
       capacity: eventReq.capacity,
+      ticketTypes: eventReq.ticketTypes || [], // Copy ticket types from request
       createdBy: eventReq.createdBy._id,
       status: 'approved'
     };
+
+    console.log('Ticket types from request:', eventReq.ticketTypes);
+    console.log('Creating event with ticket types:', newEventData.ticketTypes);
 
     // Debug: Log the data being used to create the new event
     console.log('Attempting to create new event with data:', JSON.stringify(newEventData, null, 2));
