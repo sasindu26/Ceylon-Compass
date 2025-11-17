@@ -333,22 +333,6 @@ router.get("/user", auth, async (req, res) => {
   }
 });
 
-// New route for My Listings page
-router.get("/my-requests", auth, async (req, res) => {
-  try {
-    const restaurantReqs = await RestaurantReq.find({ createdBy: req.user._id })
-      .sort({ createdAt: -1 });
-
-    res.json(restaurantReqs);
-  } catch (error) {
-    console.error('Error fetching my restaurant requests:', error);
-    res.status(500).json({ 
-      message: 'Server error', 
-      error: error.message 
-    });
-  }
-});
-
 router.get("/:id", auth, async (req, res) => {
   try {
     const restaurantReq = await RestaurantReq.findById(req.params.id)

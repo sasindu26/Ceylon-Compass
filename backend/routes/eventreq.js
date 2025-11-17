@@ -93,32 +93,6 @@ router.get("/pending", auth, async (req, res) => {
 
     res.json(eventReqs);
   } catch (error) {
-    console.error('Error fetching pending event requests:', error);
-    res.status(500).json({ 
-      message: 'Server error', 
-      error: error.message 
-    });
-  }
-});
-
-// Get my event requests for My Listings page
-router.get("/my-requests", auth, async (req, res) => {
-  try {
-    const eventReqs = await EventReq.find({ createdBy: req.user._id })
-      .sort({ createdAt: -1 });
-
-    res.json(eventReqs);
-  } catch (error) {
-    console.error('Error fetching my event requests:', error);
-    res.status(500).json({ 
-      message: 'Server error', 
-      error: error.message 
-    });
-  }
-});
-
-    res.json(eventReqs);
-  } catch (error) {
     res.status(500).json({ 
       message: 'Server error', 
       error: error.message 

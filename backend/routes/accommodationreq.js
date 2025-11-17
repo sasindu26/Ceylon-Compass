@@ -134,22 +134,6 @@ router.get("/user", auth, async (req, res) => {
   }
 });
 
-// New route for My Listings page
-router.get("/my-requests", auth, async (req, res) => {
-  try {
-    const accommodationReqs = await AccommodationReq.find({ createdBy: req.user._id })
-      .sort({ createdAt: -1 });
-
-    res.json(accommodationReqs);
-  } catch (error) {
-    console.error('Error fetching my accommodation requests:', error);
-    res.status(500).json({ 
-      message: 'Server error', 
-      error: error.message 
-    });
-  }
-});
-
 router.get("/:id", auth, async (req, res) => {
   try {
     console.log(`Fetching accommodation request with ID: ${req.params.id}`);

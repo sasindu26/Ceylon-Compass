@@ -186,29 +186,4 @@ router.get('/admin/pending', auth, async (req, res) => {
   }
 });
 
-// Update accommodation status (open/closed) - for My Listings
-router.patch('/:id/status', auth, async (req, res) => {
-  try {
-    const { status } = req.body;
-    const accommodation = await Accommodation.findById(req.params.id);
-    
-    if (!accommodation) {
-      return res.status(404).json({ message: 'Accommodation not found' });
-    }
-    
-    // Only allow accommodation owner to update status
-    if (accommodation.createdBy.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: 'Not authorized to update this accommodation' });
-    }
-    
-    accommodation.availability = status;
-    await accommodation.save();
-    
-    res.json({ message: 'Accommodation status updated successfully', accommodation });
-  } catch (error) {
-    console.error('Error updating accommodation status:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-});
-
 module.exports = router;

@@ -23,7 +23,6 @@ import Contact from './pages/Contact';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import AdminPage from './pages/AdminPage';
-import MyListings from './pages/MyListings';
 import './styles/App.css';
 
 // Protected Route component
@@ -107,16 +106,6 @@ const App = () => {
                   element={
                     <ProtectedRoute>
                       <Profile />
-                    </ProtectedRoute>
-                  }
-                />
-                
-                {/* My Listings Route */}
-                <Route
-                  path="/my-listings"
-                  element={
-                    <ProtectedRoute>
-                      <MyListings />
                     </ProtectedRoute>
                   }
                 />
