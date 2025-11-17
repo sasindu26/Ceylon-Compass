@@ -434,7 +434,21 @@ const Profile = () => {
       case 'marketplace':
         return (
           <div className="profile-section">
-            <h2>Add New Listings</h2>
+            <h2>Marketplace</h2>
+            
+            {/* My Listings Section */}
+            <div style={{ marginBottom: '2rem' }}>
+              <div className="setup-card" onClick={() => navigate('/my-listings')} style={{ maxWidth: '100%', cursor: 'pointer' }}>
+                <div className="setup-content" style={{ padding: '1.5rem' }}>
+                  <h3 style={{ marginBottom: '0.5rem' }}>📋 My Listings</h3>
+                  <p style={{ marginBottom: '1rem' }}>View and manage your restaurants, accommodations, and events</p>
+                  <button className="setup-button">View My Listings</button>
+                </div>
+              </div>
+            </div>
+
+            {/* Add New Listings Section */}
+            <h3 style={{ marginTop: '2rem', marginBottom: '1rem' }}>Add New Listings</h3>
             <p className="setup-description">Choose what you'd like to add to Ceylon Compass</p>
             <div className="setup-cards">
               <div className="setup-card" onClick={() => navigate('/restaurants/add')}>

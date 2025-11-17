@@ -21,6 +21,9 @@ const bookingSchema = new mongoose.Schema({
     min: 1,
     max: 5
   },
+  seatNumbers: [{
+    type: String
+  }],
   totalPrice: {
     type: Number,
     required: true

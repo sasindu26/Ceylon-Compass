@@ -173,4 +173,29 @@ router.post('/:id/reviews', auth, async (req, res) => {
   }
 });
 
+// Update restaurant status (open/closed) - for My Listings
+router.patch('/:id/status', auth, async (req, res) => {
+  try {
+    const { status } = req.body;
+    const restaurant = await Restaurant.findById(req.params.id);
+    
+    if (!restaurant) {
+      return res.status(404).json({ message: 'Restaurant not found' });
+    }
+    
+    // Only allow restaurant owner to update status
+    if (restaurant.createdBy.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'Not authorized to update this restaurant' });
+    }
+    
+    restaurant.availability = status;
+    await restaurant.save();
+    
+    res.json({ message: 'Restaurant status updated successfully', restaurant });
+  } catch (error) {
+    console.error('Error updating restaurant status:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
 module.exports = router; 

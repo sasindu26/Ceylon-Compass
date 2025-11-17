@@ -76,12 +76,20 @@ router.post('/', auth, async (req, res) => {
       await event.save();
     }
 
+    // Generate seat numbers
+    const seatNumbers = [];
+    const startingSeatNumber = Math.floor(Math.random() * 900) + 100; // Random starting seat
+    for (let i = 0; i < quantity; i++) {
+      seatNumbers.push(`${ticketType.charAt(0).toUpperCase()}${startingSeatNumber + i}`);
+    }
+
     // Create booking
     const booking = new Booking({
       userId,
       eventId,
       ticketType: ticketType || 'General',
       quantity,
+      seatNumbers,
       totalPrice: price * quantity,
       status: 'confirmed',
       userDetails: {

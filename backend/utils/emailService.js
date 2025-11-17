@@ -106,6 +106,11 @@ const sendBookingConfirmationEmail = async (booking, event, user) => {
                 </div>
                 
                 <div class="detail-row">
+                  <span class="label">Seat Numbers:</span>
+                  <span class="value">${booking.seatNumbers && booking.seatNumbers.length > 0 ? booking.seatNumbers.join(', ') : 'Not assigned'}</span>
+                </div>
+                
+                <div class="detail-row">
                   <span class="label">Total Amount:</span>
                   <span class="total">LKR ${booking.totalPrice.toLocaleString()}</span>
                 </div>

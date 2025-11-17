@@ -693,7 +693,25 @@ const AdminPage = () => {
               <div className="details-section">
                 <h4>Additional Information</h4>
                 <p><strong>Category:</strong> {selectedItem.category}</p>
-                <p><strong>Price:</strong> {selectedItem.price ? `LKR ${selectedItem.price.toLocaleString()}` : 'Free'}</p>
+                
+                {/* Show ticket types if available */}
+                {selectedItem.ticketTypes && selectedItem.ticketTypes.length > 0 ? (
+                  <div className="ticket-types-section">
+                    <p><strong>Ticket Types:</strong></p>
+                    <div className="ticket-types-list">
+                      {selectedItem.ticketTypes.map((ticket, index) => (
+                        <div key={index} className="ticket-type-item">
+                          <span className="ticket-name">{ticket.name}</span>
+                          <span className="ticket-price">LKR {ticket.price.toLocaleString()}</span>
+                          <span className="ticket-quantity">{ticket.available}/{ticket.quantity} available</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <p><strong>Price:</strong> {selectedItem.price ? `LKR ${selectedItem.price.toLocaleString()}` : 'Free'}</p>
+                )}
+                
                 <p><strong>Website:</strong> {selectedItem.website || 'N/A'}</p>
                 <p><strong>Contact:</strong> {selectedItem.contactInfo || 'N/A'}</p>
                 <p><strong>Status:</strong> <span className={`status-${selectedItem.status}`}>{selectedItem.status}</span></p>

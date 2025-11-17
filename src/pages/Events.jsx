@@ -91,6 +91,18 @@ const Events = () => {
         const response = await axios.get(url);
         console.log(`Received ${response.data.length} events:`, response.data);
         
+        // Debug ticket types
+        console.log('==== EVENTS TICKET TYPES DEBUG ====');
+        response.data.forEach((event, index) => {
+          console.log(`Event ${index + 1}: ${event.title}`);
+          console.log('  - Has ticketTypes:', event.ticketTypes ? 'YES' : 'NO');
+          console.log('  - ticketTypes length:', event.ticketTypes?.length || 0);
+          if (event.ticketTypes && event.ticketTypes.length > 0) {
+            console.log('  - Ticket types:', event.ticketTypes.map(t => `${t.name} (LKR ${t.price})`).join(', '));
+          }
+        });
+        console.log('==== END TICKET TYPES DEBUG ====');
+        
         // Create today's date at 00:00:00 for accurate date comparison
         const today = new Date();
         today.setHours(0, 0, 0, 0);

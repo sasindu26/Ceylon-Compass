@@ -24,7 +24,12 @@ const EventDetails = () => {
       setLoading(true);
       console.log(`Fetching event details for ID: ${id}`);
       const response = await axios.get(`http://localhost:5000/api/events/${id}`);
+      console.log('==== EVENT DETAILS RECEIVED ====');
       console.log('Event data received:', response.data);
+      console.log('Has ticketTypes:', response.data.ticketTypes ? 'YES' : 'NO');
+      console.log('ticketTypes length:', response.data.ticketTypes?.length || 0);
+      console.log('ticketTypes data:', JSON.stringify(response.data.ticketTypes, null, 2));
+      console.log('================================');
       setEvent(response.data);
       setError('');
     } catch (err) {

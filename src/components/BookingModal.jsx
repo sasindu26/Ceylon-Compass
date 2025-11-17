@@ -18,19 +18,22 @@ const BookingModal = ({ event, onClose, onSuccess }) => {
     console.log('Event:', event);
     console.log('Event ticketTypes:', event?.ticketTypes);
     console.log('ticketTypes length:', event?.ticketTypes?.length);
+    console.log('ticketTypes array:', JSON.stringify(event?.ticketTypes, null, 2));
     
     // Use ticketTypes if available, otherwise use event price as default ticket
     if (event && event.ticketTypes && event.ticketTypes.length > 0) {
-      console.log('Using event ticket types:', event.ticketTypes);
+      console.log('✅ Using event ticket types:', event.ticketTypes);
       setSelectedTicketType(event.ticketTypes[0]);
     } else if (event && event.price) {
       // Create a default ticket type from event price
-      console.log('Creating default ticket type from event price:', event.price);
+      console.log('⚠️ Creating default ticket type from event price:', event.price);
       setSelectedTicketType({
         name: 'General Admission',
         price: event.price,
         available: event.capacity || 100
       });
+    } else {
+      console.log('❌ No ticket types or price found!');
     }
     
     // Check user's existing bookings for this event

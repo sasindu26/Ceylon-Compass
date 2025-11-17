@@ -227,6 +227,13 @@ const AddEvent = () => {
     setError('');
 
     try {
+      // Validate ticket types
+      if (!formData.ticketTypes || formData.ticketTypes.length === 0) {
+        setError('Please add at least one ticket type before submitting');
+        setLoading(false);
+        return;
+      }
+
       const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('You must be logged in to submit an event');
@@ -271,6 +278,12 @@ const AddEvent = () => {
         status: 'pending',
         createdBy: userId
       };
+
+      console.log('==== SUBMITTING EVENT REQUEST ====');
+      console.log('formData.ticketTypes:', formData.ticketTypes);
+      console.log('eventReqData.ticketTypes:', eventReqData.ticketTypes);
+      console.log('Full eventReqData:', JSON.stringify(eventReqData, null, 2));
+      console.log('==================================');
 
       const response = await axios.post('http://localhost:5000/api/eventreq', eventReqData, {
         headers: {
@@ -464,38 +477,10 @@ const AddEvent = () => {
           </select>
         </div>
 
-        <div className="form-row">
-          <div className="form-group">
-            <label htmlFor="price">Price (Leave empty if using ticket types)</label>
-            <input
-              type="number"
-              id="price"
-              name="price"
-              value={formData.price}
-              onChange={handleChange}
-              min="0"
-              disabled={formData.ticketTypes.length > 0}
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="capacity">Capacity (Leave empty if using ticket types)</label>
-            <input
-              type="number"
-              id="capacity"
-              name="capacity"
-              value={formData.capacity}
-              onChange={handleChange}
-              min="1"
-              disabled={formData.ticketTypes.length > 0}
-            />
-          </div>
-        </div>
-
         {/* Ticket Types Section */}
         <div className="form-section">
-          <h3>Ticket Types (Optional - For concerts, shows, etc.)</h3>
-          <p className="form-hint">Add different ticket categories like Seating, Standing, VIP, etc.</p>
+          <h3>Ticket Types (For concerts, shows, events)</h3>
+          <p className="form-hint">Add different ticket categories like VIP, Balcony, Standing, ODC Reserved, etc. with their prices and quantities.</p>
           
           <div className="ticket-type-form">
             <div className="form-row">

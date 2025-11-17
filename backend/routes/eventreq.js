@@ -34,8 +34,15 @@ router.post("/", auth, async (req, res) => {
       status: 'pending'
     };
 
+    console.log('==== CREATING EVENT REQUEST ====');
+    console.log('Ticket Types received:', req.body.ticketTypes);
+    console.log('Full eventReqData:', JSON.stringify(eventReqData, null, 2));
+
     const eventReq = new EventReq(eventReqData);
     await eventReq.save();
+
+    console.log('Event request saved with ticket types:', eventReq.ticketTypes);
+    console.log('==== EVENT REQUEST CREATED ====');
 
     res.status(201).json(eventReq);
   } catch (error) {
@@ -83,6 +90,32 @@ router.get("/pending", auth, async (req, res) => {
     const eventReqs = await EventReq.find({ status: 'pending' })
       .sort({ createdAt: -1 })
       .populate('createdBy', 'username email');
+
+    res.json(eventReqs);
+  } catch (error) {
+    console.error('Error fetching pending event requests:', error);
+    res.status(500).json({ 
+      message: 'Server error', 
+      error: error.message 
+    });
+  }
+});
+
+// Get my event requests for My Listings page
+router.get("/my-requests", auth, async (req, res) => {
+  try {
+    const eventReqs = await EventReq.find({ createdBy: req.user._id })
+      .sort({ createdAt: -1 });
+
+    res.json(eventReqs);
+  } catch (error) {
+    console.error('Error fetching my event requests:', error);
+    res.status(500).json({ 
+      message: 'Server error', 
+      error: error.message 
+    });
+  }
+});
 
     res.json(eventReqs);
   } catch (error) {

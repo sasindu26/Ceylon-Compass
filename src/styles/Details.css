@@ -706,76 +706,80 @@ select option:disabled {
 
 /* Ticket Types Section */
 .ticket-types-section {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background: #f8f9fa;
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: transparent;
   border-radius: 8px;
 }
 
 .ticket-types-section .section-heading {
-  font-size: 1.4rem;
+  font-size: 1.1rem;
   color: #333;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
   font-weight: 600;
 }
 
 .ticket-types-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
 .ticket-type-card {
   background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border-left: 4px solid #007bff;
+  border-left: 3px solid #007bff;
+  flex: 0 0 auto;
+  min-width: 180px;
+  max-width: 220px;
 }
 
 .ticket-type-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .ticket-type-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .ticket-type-header h4 {
   margin: 0;
-  font-size: 1.3rem;
+  font-size: 1rem;
   color: #333;
+  font-weight: 600;
 }
 
 .ticket-price {
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   font-weight: bold;
   color: #28a745;
 }
 
 .ticket-description {
   color: #666;
-  font-size: 0.95rem;
-  margin-bottom: 1rem;
-  line-height: 1.5;
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
 }
 
 .ticket-availability {
-  margin-top: 1rem;
-  padding-top: 1rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
   border-top: 1px solid #e0e0e0;
 }
 
 .ticket-availability span {
   display: inline-block;
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  font-size: 0.9rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
   font-weight: 600;
 }
 

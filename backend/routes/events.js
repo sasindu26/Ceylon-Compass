@@ -34,6 +34,14 @@ router.get("/", async (req, res) => {
     
     const events = await Event.find(query).sort({ date: sortDirection });
     console.log(`Found ${events.length} events`);
+    
+    // Debug ticket types
+    events.forEach((event, index) => {
+      console.log(`Event ${index + 1}: ${event.title}`);
+      console.log(`  - ticketTypes:`, event.ticketTypes);
+      console.log(`  - ticketTypes length:`, event.ticketTypes?.length || 0);
+    });
+    
     res.json(events);
   } catch (error) {
     console.error("Error fetching events:", error);
@@ -56,6 +64,12 @@ router.get("/:id", async (req, res) => {
     if (!event) {
       return res.status(404).json({ message: "Event not found" });
     }
+
+    console.log('==== GET EVENT BY ID ====');
+    console.log('Event:', event.title);
+    console.log('ticketTypes:', event.ticketTypes);
+    console.log('ticketTypes length:', event.ticketTypes?.length || 0);
+    console.log('========================');
 
     res.json(event);
   } catch (error) {
@@ -183,6 +197,31 @@ router.get("/admin/pending", auth, async (req, res) => {
     const events = await Event.find({ status: 'pending' }).sort({ createdAt: -1 });
     res.json(events);
   } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+});
+
+// Update event status (open/closed/soldout) - for My Listings
+router.patch('/:id/status', auth, async (req, res) => {
+  try {
+    const { status } = req.body;
+    const event = await Event.findById(req.params.id);
+    
+    if (!event) {
+      return res.status(404).json({ message: 'Event not found' });
+    }
+    
+    // Only allow event creator to update status
+    if (event.createdBy.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: 'Not authorized to update this event' });
+    }
+    
+    event.status = status;
+    await event.save();
+    
+    res.json({ message: 'Event status updated successfully', event });
+  } catch (error) {
+    console.error('Error updating event status:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 });
