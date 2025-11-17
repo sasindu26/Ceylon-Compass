@@ -41,7 +41,7 @@ const Register = () => {
 
   const fetchCountries = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/locations/countries');
+      const response = await axios.get('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/locations/countries');
       setCountries(response.data);
     } catch (err) {
       console.error('Error fetching countries:', err);
@@ -54,7 +54,7 @@ const Register = () => {
     
     try {
       const encodedCountry = encodeURIComponent(country);
-      const response = await axios.get(`http://localhost:5000/api/locations/cities/${encodedCountry}`);
+      const response = await axios.get(`https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/locations/cities/${encodedCountry}`);
       setCities(response.data);
     } catch (err) {
       console.error('Error fetching cities:', err);

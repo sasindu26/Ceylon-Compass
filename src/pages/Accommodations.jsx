@@ -55,7 +55,7 @@ const Accommodations = () => {
     const fetchAccommodations = async () => {
       try {
         setLoading(true);
-        let url = 'http://localhost:5000/api/accommodations';
+        let url = 'https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/accommodations';
         
         // Add query parameters based on filters
         const params = new URLSearchParams();

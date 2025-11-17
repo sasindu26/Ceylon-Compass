@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(0);
 
   // API base URL
-  const API_URL = 'http://localhost:5000/api';
+  const API_URL = 'https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api';
 
   // Setup axios default config
   axios.defaults.baseURL = API_URL;

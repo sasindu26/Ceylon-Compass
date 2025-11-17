@@ -1,6 +1,12 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import axios from 'axios';
-import { useAuth } from './AuthContext';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
+import axios from "axios";
+import { useAuth } from "./AuthContext";
 
 const LocationContext = createContext();
 
@@ -10,8 +16,8 @@ export const useLocation = () => {
 
 export const LocationProvider = ({ children }) => {
   const { user } = useAuth();
-  const [selectedCountry, setSelectedCountry] = useState('');
-  const [selectedCity, setSelectedCity] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
   const [countries, setCountries] = useState([]);
   const [cities, setCities] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -21,8 +27,8 @@ export const LocationProvider = ({ children }) => {
   // Update location when user logs in or changes profile
   useEffect(() => {
     if (user) {
-      setSelectedCountry(user.country || '');
-      setSelectedCity(user.city || '');
+      setSelectedCountry(user.country || "");
+      setSelectedCity(user.city || "");
     }
   }, [user]);
 
@@ -37,13 +43,15 @@ export const LocationProvider = ({ children }) => {
       setLoading(true);
       setError(null);
       console.log("Fetching countries from API...");
-      const response = await axios.get('http://localhost:5000/api/locations/countries');
+      const response = await axios.get(
+        "https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/locations/countries",
+      );
       console.log("Countries API response:", response.data);
       setCountries(response.data);
       return response.data;
     } catch (err) {
-      console.error('Error fetching countries:', err);
-      setError('Failed to load countries');
+      console.error("Error fetching countries:", err);
+      setError("Failed to load countries");
       return [];
     } finally {
       setLoading(false);
@@ -62,15 +70,15 @@ export const LocationProvider = ({ children }) => {
       setLoading(true);
       setError(null);
       console.log(`Fetching cities for country: ${country}`);
-      const url = `http://localhost:5000/api/locations/cities/${encodeURIComponent(country)}`;
+      const url = `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/locations/cities/${encodeURIComponent(country)}`;
       console.log("Cities API URL:", url);
       const response = await axios.get(url);
       console.log("Cities API response:", response.data);
       setCities(response.data);
       return response.data;
     } catch (err) {
-      console.error('Error fetching cities:', err);
-      setError('Failed to load cities');
+      console.error("Error fetching cities:", err);
+      setError("Failed to load cities");
       setCities([]);
       return [];
     } finally {
@@ -95,25 +103,25 @@ export const LocationProvider = ({ children }) => {
       // Use inline function to avoid dependency on fetchCitiesByCountry
       const fetchCities = async () => {
         if (!selectedCountry) return;
-        
+
         try {
           setLoading(true);
           setError(null);
           console.log(`Fetching cities for country: ${selectedCountry}`);
-          const url = `http://localhost:5000/api/locations/cities/${encodeURIComponent(selectedCountry)}`;
+          const url = `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/locations/cities/${encodeURIComponent(selectedCountry)}`;
           console.log("Cities API URL:", url);
           const response = await axios.get(url);
           console.log("Cities API response:", response.data);
           setCities(response.data);
         } catch (err) {
-          console.error('Error fetching cities:', err);
-          setError('Failed to load cities');
+          console.error("Error fetching cities:", err);
+          setError("Failed to load cities");
           setCities([]);
         } finally {
           setLoading(false);
         }
       };
-      
+
       fetchCities();
     }
   }, [selectedCountry]);
@@ -128,7 +136,7 @@ export const LocationProvider = ({ children }) => {
     updateLocation,
     fetchCountries,
     fetchCitiesByCountry,
-    refreshLocations
+    refreshLocations,
   };
 
   return (
@@ -136,4 +144,4 @@ export const LocationProvider = ({ children }) => {
       {children}
     </LocationContext.Provider>
   );
-}; 
+};

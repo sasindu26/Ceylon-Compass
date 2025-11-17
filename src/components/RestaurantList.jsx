@@ -11,7 +11,7 @@ const RestaurantList = () => {
     const fetchRestaurants = async () => {
       try {
         console.log("Fetching restaurants from API...");
-        const response = await fetch('http://localhost:5000/api/restaurants', {
+        const response = await fetch('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/restaurants', {
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'

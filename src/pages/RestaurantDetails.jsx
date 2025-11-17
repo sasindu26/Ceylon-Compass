@@ -18,7 +18,7 @@ const RestaurantDetails = () => {
     try {
       setLoading(true);
       console.log(`Fetching restaurant details for ID: ${id}`);
-      const response = await axios.get(`http://localhost:5000/api/restaurants/${id}`);
+      const response = await axios.get(`https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/restaurants/${id}`);
       console.log('Restaurant data received:', response.data);
       
       // Check if restaurant data is missing website field

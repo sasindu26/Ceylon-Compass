@@ -285,7 +285,7 @@ const AddEvent = () => {
       console.log('Full eventReqData:', JSON.stringify(eventReqData, null, 2));
       console.log('==================================');
 
-      const response = await axios.post('http://localhost:5000/api/eventreq', eventReqData, {
+      const response = await axios.post('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/eventreq', eventReqData, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`

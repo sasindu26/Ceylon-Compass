@@ -20,17 +20,17 @@ const AdminDashboard = () => {
     try {
       setLoading(true);
       if (activeTab === 'events') {
-        const response = await axios.get('http://localhost:5000/api/events', {
+        const response = await axios.get('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/events', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
         setEvents(response.data);
       } else if (activeTab === 'accommodations') {
-        const response = await axios.get('http://localhost:5000/api/accommodations', {
+        const response = await axios.get('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/accommodations', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
         setAccommodations(response.data);
       } else if (activeTab === 'messages') {
-        const response = await axios.get('http://localhost:5000/api/contact', {
+        const response = await axios.get('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/contact', {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
         console.log('Messages fetched:', response.data);
@@ -55,11 +55,11 @@ const AdminDashboard = () => {
 
     try {
       if (type === 'message') {
-        await axios.delete(`http://localhost:5000/api/contact/${id}`, {
+        await axios.delete(`https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/contact/${id}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
       } else {
-        await axios.delete(`http://localhost:5000/api/${type}/${id}`, {
+        await axios.delete(`https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/${type}/${id}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
         });
       }
@@ -71,7 +71,7 @@ const AdminDashboard = () => {
 
   const handleMarkAsRead = async (id, isRead) => {
     try {
-      await axios.patch(`http://localhost:5000/api/contact/${id}/read`, 
+      await axios.patch(`https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/contact/${id}/read`, 
         { read: isRead },
         { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
       );
@@ -88,7 +88,7 @@ const AdminDashboard = () => {
   const handleEventCleanup = async () => {
     if (window.confirm('Are you sure you want to delete all past events? This action cannot be undone.')) {
       try {
-        const response = await axios.post('http://localhost:5000/api/admin/cleanup-past-events', {}, {
+        const response = await axios.post('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/admin/cleanup-past-events', {}, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('token')}`
           }

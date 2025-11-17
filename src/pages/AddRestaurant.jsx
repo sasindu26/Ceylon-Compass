@@ -1,44 +1,44 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { useAuth } from '../context/AuthContext';
-import { useLocation } from '../context/LocationContext';
-import VerificationPopup from '../components/VerificationPopup';
-import MapLocationPicker from '../components/MapLocationPicker';
-import '../styles/Details.css';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useAuth } from "../context/AuthContext";
+import { useLocation } from "../context/LocationContext";
+import VerificationPopup from "../components/VerificationPopup";
+import MapLocationPicker from "../components/MapLocationPicker";
+import "../styles/Details.css";
 
 const AddRestaurant = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { 
-    countries, 
-    cities, 
-    loading: locationLoading, 
-    error: locationError, 
-    fetchCountries, 
-    fetchCitiesByCountry 
+  const {
+    countries,
+    cities,
+    loading: locationLoading,
+    error: locationError,
+    fetchCountries,
+    fetchCitiesByCountry,
   } = useLocation();
-  
+
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [uploadedImages, setUploadedImages] = useState([]);
   const [cloudinaryLoaded, setCloudinaryLoaded] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
-  
+
   const [formData, setFormData] = useState({
-    name: '',
-    cuisine: '',
-    country: '',
-    city: '',
-    address: '',
-    description: '',
-    website: '',
-    contactNumber: '',
-    openingHours: '',
+    name: "",
+    cuisine: "",
+    country: "",
+    city: "",
+    address: "",
+    description: "",
+    website: "",
+    contactNumber: "",
+    openingHours: "",
     images: [],
-    cloudName: 'dzetdg1sz',
-    uploadPreset: 'restaurants',
-    status: 'pending'
+    cloudName: "dzetdg1sz",
+    uploadPreset: "restaurants",
+    status: "pending",
   });
 
   // Load initial data
@@ -46,19 +46,27 @@ const AddRestaurant = () => {
     // Load Cloudinary script
     if (window.cloudinary && window.cloudinary.openUploadWidget) {
       setCloudinaryLoaded(true);
-    } else if (!document.querySelector('script[src="https://widget.cloudinary.com/v2.0/global/all.js"]')) {
-      const script = document.createElement('script');
-      script.src = 'https://widget.cloudinary.com/v2.0/global/all.js';
+    } else if (
+      !document.querySelector(
+        'script[src="https://widget.cloudinary.com/v2.0/global/all.js"]',
+      )
+    ) {
+      const script = document.createElement("script");
+      script.src = "https://widget.cloudinary.com/v2.0/global/all.js";
       script.async = true;
       script.onload = () => {
         if (window.cloudinary && window.cloudinary.openUploadWidget) {
           setCloudinaryLoaded(true);
         } else {
-          setError('Cloudinary widget failed to initialize. Please refresh the page.');
+          setError(
+            "Cloudinary widget failed to initialize. Please refresh the page.",
+          );
         }
       };
       script.onerror = () => {
-        setError('Failed to load Cloudinary script. Please check your network and try again.');
+        setError(
+          "Failed to load Cloudinary script. Please check your network and try again.",
+        );
       };
       document.body.appendChild(script);
     }
@@ -85,45 +93,49 @@ const AddRestaurant = () => {
   const handleCountryChange = (e) => {
     const country = e.target.value;
     console.log("Country selected:", country);
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       country,
-      city: ''
+      city: "",
     }));
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleMapLocationSelect = (location) => {
-    console.log('Map location selected:', location);
-    setFormData(prev => ({
+    console.log("Map location selected:", location);
+    setFormData((prev) => ({
       ...prev,
       address: location.address,
       country: location.country || prev.country,
-      city: location.city || prev.city
+      city: location.city || prev.city,
     }));
   };
 
   const handleImageUpload = () => {
-    if (!cloudinaryLoaded || !window.cloudinary || !window.cloudinary.openUploadWidget) {
-      setError('Cloudinary widget is not available. Please refresh the page.');
+    if (
+      !cloudinaryLoaded ||
+      !window.cloudinary ||
+      !window.cloudinary.openUploadWidget
+    ) {
+      setError("Cloudinary widget is not available. Please refresh the page.");
       return;
     }
 
     window.cloudinary.openUploadWidget(
       {
-        cloudName: 'dzetdg1sz',
-        uploadPreset: 'restaurants',
-        sources: ['local', 'url', 'camera'],
+        cloudName: "dzetdg1sz",
+        uploadPreset: "restaurants",
+        sources: ["local", "url", "camera"],
         multiple: true,
         maxFiles: 5,
-        resourceType: 'image',
+        resourceType: "image",
         maxFileSize: 5000000, // 5MB
         styles: {
           palette: {
@@ -139,110 +151,118 @@ const AddRestaurant = () => {
             complete: "#339933",
             error: "#cc0000",
             textDark: "#000000",
-            textLight: "#fcfffd"
-          }
-        }
+            textLight: "#fcfffd",
+          },
+        },
       },
       (error, result) => {
-        if (!error && result && result.event === 'success') {
+        if (!error && result && result.event === "success") {
           const imageUrl = result.info.secure_url;
-          setUploadedImages(prev => [...prev, imageUrl]);
-          setFormData(prev => ({
+          setUploadedImages((prev) => [...prev, imageUrl]);
+          setFormData((prev) => ({
             ...prev,
-            images: [...prev.images, imageUrl]
+            images: [...prev.images, imageUrl],
           }));
         } else if (error) {
-          console.error('Upload error:', error);
-          setError('Image upload failed: ' + (error.message || 'Unknown error'));
+          console.error("Upload error:", error);
+          setError(
+            "Image upload failed: " + (error.message || "Unknown error"),
+          );
         }
-      }
+      },
     );
   };
 
   const removeImage = (indexToRemove) => {
-    setUploadedImages(prev => prev.filter((_, index) => index !== indexToRemove));
-    setFormData(prev => ({
+    setUploadedImages((prev) =>
+      prev.filter((_, index) => index !== indexToRemove),
+    );
+    setFormData((prev) => ({
       ...prev,
-      images: prev.images.filter((_, index) => index !== indexToRemove)
+      images: prev.images.filter((_, index) => index !== indexToRemove),
     }));
   };
 
   const handleVerificationClose = () => {
     setShowVerification(false);
-    navigate('/restaurants');
+    navigate("/restaurants");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (formData.images.length === 0) {
-      setError('Please upload at least one image');
+      setError("Please upload at least one image");
       return;
     }
 
     try {
       setLoading(true);
-      setError('');
+      setError("");
 
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       if (!token) {
-        throw new Error('No authentication token found');
+        throw new Error("No authentication token found");
       }
 
       // Get user from context and localStorage
       const currentUser = user;
-      const storedUser = JSON.parse(localStorage.getItem('user'));
+      const storedUser = JSON.parse(localStorage.getItem("user"));
 
       if (!currentUser && !storedUser) {
-        throw new Error('User information not found. Please log in again.');
+        throw new Error("User information not found. Please log in again.");
       }
 
       // Use the user ID from either source
       const userId = currentUser?._id || storedUser?._id || storedUser?.id;
       if (!userId) {
-        throw new Error('User ID not found. Please log in again.');
+        throw new Error("User ID not found. Please log in again.");
       }
 
       const restaurantReqData = {
         ...formData,
         createdBy: userId,
-        status: 'pending'
+        status: "pending",
       };
 
       // Debug log what we're sending
-      console.log('Sending restaurant request data:', restaurantReqData);
+      console.log("Sending restaurant request data:", restaurantReqData);
 
       const response = await axios.post(
-        'http://localhost:5000/api/restaurantreq',
+        "https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/restaurantreq",
         restaurantReqData,
         {
           headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          }
-        }
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
 
-      console.log('Restaurant creation response:', response.data);
+      console.log("Restaurant creation response:", response.data);
 
       if (response.status === 201) {
         setShowVerification(true);
       }
     } catch (error) {
-      console.error('Error adding restaurant:', error);
+      console.error("Error adding restaurant:", error);
       // Enhanced error logging to show response data if available
       if (error.response && error.response.data) {
-        console.error('Server error response:', error.response.data);
+        console.error("Server error response:", error.response.data);
         // Show detailed error message if available
-        const errorMessage = error.response.data.message || 'Failed to add restaurant';
-        const detailedError = error.response.data.details || 
-                             (error.response.data.fields ? 
-                              `Missing fields: ${error.response.data.fields.join(', ')}` : 
-                              '');
-        
-        setError(detailedError ? `${errorMessage}: ${detailedError}` : errorMessage);
+        const errorMessage =
+          error.response.data.message || "Failed to add restaurant";
+        const detailedError =
+          error.response.data.details ||
+          (error.response.data.fields
+            ? `Missing fields: ${error.response.data.fields.join(", ")}`
+            : "");
+
+        setError(
+          detailedError ? `${errorMessage}: ${detailedError}` : errorMessage,
+        );
       } else {
-        setError('Failed to add restaurant');
+        setError("Failed to add restaurant");
       }
     } finally {
       setLoading(false);
@@ -274,18 +294,22 @@ const AddRestaurant = () => {
           <div className="form-group">
             <label>Restaurant Images</label>
             <div className="image-upload-container">
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="upload-button"
                 onClick={handleImageUpload}
                 disabled={!cloudinaryLoaded}
               >
-                {cloudinaryLoaded ? 'Upload Images' : 'Loading Widget...'}
+                {cloudinaryLoaded ? "Upload Images" : "Loading Widget..."}
               </button>
               <div className="uploaded-images">
                 {uploadedImages.map((url, index) => (
                   <div key={index} className="uploaded-image-container">
-                    <img src={url} alt={`Upload ${index + 1}`} className="uploaded-image-preview" />
+                    <img
+                      src={url}
+                      alt={`Upload ${index + 1}`}
+                      className="uploaded-image-preview"
+                    />
                     <button
                       type="button"
                       className="remove-image-button"
@@ -297,7 +321,8 @@ const AddRestaurant = () => {
                 ))}
               </div>
               <p className="image-help-text">
-                Upload up to 5 images. First image will be the main display image.
+                Upload up to 5 images. First image will be the main display
+                image.
               </p>
             </div>
           </div>
@@ -325,13 +350,16 @@ const AddRestaurant = () => {
               disabled={locationLoading && countries.length === 0}
             >
               <option value="">
-                {locationLoading && countries.length === 0 ? 'Loading countries...' : 'Select Country'}
+                {locationLoading && countries.length === 0
+                  ? "Loading countries..."
+                  : "Select Country"}
               </option>
-              {countries && countries.map(country => (
-                <option key={country} value={country}>
-                  {country}
-                </option>
-              ))}
+              {countries &&
+                countries.map((country) => (
+                  <option key={country} value={country}>
+                    {country}
+                  </option>
+                ))}
             </select>
             {locationLoading && countries.length === 0 && (
               <div className="loading-indicator">Loading countries...</div>
@@ -346,19 +374,25 @@ const AddRestaurant = () => {
               value={formData.city}
               onChange={handleChange}
               required
-              disabled={!formData.country || (locationLoading && formData.country)}
+              disabled={
+                !formData.country || (locationLoading && formData.country)
+              }
             >
               <option value="">
-                {locationLoading && formData.country ? 'Loading cities...' : 'Select City'}
+                {locationLoading && formData.country
+                  ? "Loading cities..."
+                  : "Select City"}
               </option>
               {cities && cities.length > 0 ? (
-                cities.map(city => (
+                cities.map((city) => (
                   <option key={city} value={city}>
                     {city}
                   </option>
                 ))
               ) : formData.country && !locationLoading ? (
-                <option value="" disabled>No cities found for this country</option>
+                <option value="" disabled>
+                  No cities found for this country
+                </option>
               ) : null}
             </select>
           </div>
@@ -378,7 +412,7 @@ const AddRestaurant = () => {
               value={formData.address}
               readOnly
               required
-              style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }}
+              style={{ backgroundColor: "#f5f5f5", cursor: "not-allowed" }}
               placeholder="Click on the map to set location"
             />
           </div>
@@ -437,7 +471,7 @@ const AddRestaurant = () => {
             className="submit-button"
             disabled={loading || uploadedImages.length === 0}
           >
-            {loading ? 'Adding Restaurant...' : 'Add Restaurant'}
+            {loading ? "Adding Restaurant..." : "Add Restaurant"}
           </button>
         </form>
       </div>
@@ -452,4 +486,4 @@ const AddRestaurant = () => {
   );
 };
 
-export default AddRestaurant; 
+export default AddRestaurant;

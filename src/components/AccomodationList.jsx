@@ -16,7 +16,7 @@ function AccommodationList({ filters }) {
     if (filters.maxPrice !== undefined) query.append('maxPrice', filters.maxPrice);
 
     // Fetch data from backend with query string
-    fetch(`http://localhost:5000/api/accommodations?${query.toString()}`)
+    fetch(`https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/accommodations?${query.toString()}`)
       .then(res => {
         if (!res.ok) {
           throw new Error('No accommodations found with the selected filters');

@@ -73,7 +73,7 @@ const Profile = () => {
 
   const fetchCountries = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/locations/countries');
+      const response = await axios.get('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/locations/countries');
       setCountries(response.data);
       setError(''); // Clear any existing errors
     } catch (err) {
@@ -91,7 +91,7 @@ const Profile = () => {
     
     try {
       const encodedCountry = encodeURIComponent(country);
-      const response = await axios.get(`http://localhost:5000/api/locations/cities/${encodedCountry}`);
+      const response = await axios.get(`https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/locations/cities/${encodedCountry}`);
       setCities(response.data);
       setError(''); // Clear any existing errors
     } catch (err) {
@@ -106,7 +106,7 @@ const Profile = () => {
       const token = localStorage.getItem('token');
       if (!token) return;
       
-      const response = await axios.get('http://localhost:5000/api/notifications/unread-count', {
+      const response = await axios.get('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/notifications/unread-count', {
         headers: { Authorization: `Bearer ${token}` }
       });
       setUnreadCount(response.data.count);
@@ -126,7 +126,7 @@ const Profile = () => {
         return;
       }
 
-      const response = await axios.get('http://localhost:5000/api/auth/profile', {
+      const response = await axios.get('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/auth/profile', {
         headers: { Authorization: `Bearer ${token}` }
       });
       
@@ -223,7 +223,7 @@ const Profile = () => {
             // Fetch cities for detected country
             try {
               const citiesResponse = await axios.get(
-                `http://localhost:5000/api/locations/cities/${encodeURIComponent(detectedCountry)}`,
+                `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/locations/cities/${encodeURIComponent(detectedCountry)}`,
                 { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
               );
               
@@ -394,7 +394,7 @@ const Profile = () => {
       }
 
       const response = await axios.put(
-        'http://localhost:5000/api/auth/profile/password',
+        'https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/auth/profile/password',
         {
           currentPassword: formData.currentPassword,
           newPassword: formData.newPassword

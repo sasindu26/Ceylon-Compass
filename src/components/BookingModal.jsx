@@ -44,7 +44,7 @@ const BookingModal = ({ event, onClose, onSuccess }) => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(
-        `http://localhost:5000/api/bookings/check/${event._id}`,
+        `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/bookings/check/${event._id}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -104,7 +104,7 @@ const BookingModal = ({ event, onClose, onSuccess }) => {
       };
 
       const response = await axios.post(
-        'http://localhost:5000/api/bookings',
+        'https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/bookings',
         bookingData,
         {
           headers: {

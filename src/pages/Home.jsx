@@ -23,13 +23,13 @@ const Home = () => {
         setLoading(true);
         
         // Fetch upcoming events
-        const eventsResponse = await axios.get('http://localhost:5000/api/events?showAll=true&sort=asc');
+        const eventsResponse = await axios.get('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/events?showAll=true&sort=asc');
         
         // Fetch restaurants count
-        const restaurantsResponse = await axios.get('http://localhost:5000/api/restaurants?showAll=true');
+        const restaurantsResponse = await axios.get('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/restaurants?showAll=true');
         
         // Fetch accommodations count
-        const accommodationsResponse = await axios.get('http://localhost:5000/api/accommodations?showAll=true');
+        const accommodationsResponse = await axios.get('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/accommodations?showAll=true');
         
         if (eventsResponse.data && Array.isArray(eventsResponse.data)) {
           // Filter future events and sort by date

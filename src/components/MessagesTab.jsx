@@ -14,7 +14,7 @@ const MessagesTab = () => {
   const fetchNotifications = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/notifications/user', {
+      const response = await axios.get('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/notifications/user', {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -32,7 +32,7 @@ const MessagesTab = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        `http://localhost:5000/api/notifications/${notificationId}/read`,
+        `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/notifications/${notificationId}/read`,
         {},
         {
           headers: {
@@ -50,7 +50,7 @@ const MessagesTab = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        'http://localhost:5000/api/notifications/read-all',
+        'https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/notifications/read-all',
         {},
         {
           headers: {

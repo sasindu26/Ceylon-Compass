@@ -16,7 +16,7 @@ const RestaurantFilter = ({ onFilterChange }) => {
     const fetchCountries = async () => {
       try {
         setLoading(true);
-        const response = await axios.get('http://localhost:5000/api/locations/countries');
+        const response = await axios.get('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/locations/countries');
         setCountries(response.data || []);
         setError('');
       } catch (err) {
@@ -40,7 +40,7 @@ const RestaurantFilter = ({ onFilterChange }) => {
 
     try {
       setLoading(true);
-      const response = await axios.get(`http://localhost:5000/api/locations/cities/${encodeURIComponent(country)}`);
+      const response = await axios.get(`https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/locations/cities/${encodeURIComponent(country)}`);
       setCities(response.data || []);
       setError('');
     } catch (err) {

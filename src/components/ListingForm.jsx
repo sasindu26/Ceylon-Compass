@@ -25,7 +25,11 @@ const ListingForm = () => {
       return;
     }
 
-    if (!document.querySelector('script[src="https://widget.cloudinary.com/v2.0/global/all.js"]')) {
+    if (
+      !document.querySelector(
+        'script[src="https://widget.cloudinary.com/v2.0/global/all.js"]',
+      )
+    ) {
       console.log("Cloudinary script not found, adding dynamically...");
       const script = document.createElement("script");
       script.src = "https://widget.cloudinary.com/v2.0/global/all.js";
@@ -36,12 +40,16 @@ const ListingForm = () => {
         if (window.cloudinary && window.cloudinary.openUploadWidget) {
           setCloudinaryLoaded(true);
         } else {
-          setError("Cloudinary widget failed to initialize. Please refresh the page.");
+          setError(
+            "Cloudinary widget failed to initialize. Please refresh the page.",
+          );
         }
       };
       script.onerror = () => {
         console.error("Failed to load Cloudinary script");
-        setError("Failed to load Cloudinary script. Please check your network and try again.");
+        setError(
+          "Failed to load Cloudinary script. Please check your network and try again.",
+        );
       };
       document.head.appendChild(script);
     }
@@ -53,7 +61,11 @@ const ListingForm = () => {
   };
 
   const handleImageUpload = () => {
-    if (!cloudinaryLoaded || !window.cloudinary || !window.cloudinary.openUploadWidget) {
+    if (
+      !cloudinaryLoaded ||
+      !window.cloudinary ||
+      !window.cloudinary.openUploadWidget
+    ) {
       setError("Cloudinary widget is not available. Please refresh the page.");
       return;
     }
@@ -73,10 +85,12 @@ const ListingForm = () => {
           setError("");
         } else if (error) {
           console.error("Upload error:", error);
-          setError("Image upload failed: " + (error.message || "Unknown error"));
+          setError(
+            "Image upload failed: " + (error.message || "Unknown error"),
+          );
           setSuccess("");
         }
-      }
+      },
     );
   };
 
@@ -95,7 +109,14 @@ const ListingForm = () => {
     setSuccess("");
 
     // Client-side validation
-    if (!title || !selectedCountry || !selectedCity || !price || !contact || !image) {
+    if (
+      !title ||
+      !selectedCountry ||
+      !selectedCity ||
+      !price ||
+      !contact ||
+      !image
+    ) {
       setError("Please fill all required fields.");
       return;
     }
@@ -106,18 +127,21 @@ const ListingForm = () => {
 
     try {
       console.log("Sending POST to /api/accommodationreq");
-      const response = await fetch("http://localhost:5000/api/accommodationreq", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title,
-          country: selectedCountry,
-          city: selectedCity,
-          price: Number(price),
-          contact,
-          image,
-        }),
-      });
+      const response = await fetch(
+        "https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/accommodationreq",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title,
+            country: selectedCountry,
+            city: selectedCity,
+            price: Number(price),
+            contact,
+            image,
+          }),
+        },
+      );
 
       console.log("Response status:", response.status);
 
@@ -130,7 +154,8 @@ const ListingForm = () => {
         } else {
           console.error("Non-JSON response received:", await response.text());
           if (response.status === 404) {
-            errorMsg = "API endpoint not found. Please check if the backend is running and the /api/accommodationreq route is registered.";
+            errorMsg =
+              "API endpoint not found. Please check if the backend is running and the /api/accommodationreq route is registered.";
           }
         }
         setError(`${errorMsg} (HTTP ${response.status})`);
@@ -150,7 +175,9 @@ const ListingForm = () => {
       setImage("");
     } catch (err) {
       console.error("Fetch error:", err);
-      setError("Unable to connect to the server. Please check if the backend is running and try again.");
+      setError(
+        "Unable to connect to the server. Please check if the backend is running and try again.",
+      );
     }
   };
 

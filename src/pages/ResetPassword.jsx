@@ -31,7 +31,7 @@ const ResetPassword = () => {
     }
 
     try {
-      const response = await axios.post(`http://localhost:5000/api/auth/reset-password/${token}`, {
+      const response = await axios.post(`https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/auth/reset-password/${token}`, {
         password
       });
       setSuccess(response.data.message);

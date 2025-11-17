@@ -57,7 +57,7 @@ const Events = () => {
     const fetchEvents = async () => {
       try {
         setLoading(true);
-        let url = 'http://localhost:5000/api/events';
+        let url = 'https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/events';
         
         // Add query parameters based on filters
         const params = new URLSearchParams();

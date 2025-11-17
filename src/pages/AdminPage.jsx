@@ -50,7 +50,7 @@ const AdminPage = () => {
         return;
       }
 
-      const response = await axios.get('http://localhost:5000/api/auth/profile', {
+      const response = await axios.get('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/auth/profile', {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -79,15 +79,15 @@ const AdminPage = () => {
       };
 
       // Fetch event requests
-      const eventRes = await axios.get('http://localhost:5000/api/eventreq', { headers });
+      const eventRes = await axios.get('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/eventreq', { headers });
       setEventRequests(eventRes.data);
 
       // Fetch accommodation requests
-      const accRes = await axios.get('http://localhost:5000/api/accommodationreq', { headers });
+      const accRes = await axios.get('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/accommodationreq', { headers });
       setAccommodationRequests(accRes.data);
 
       // Fetch restaurant requests
-      const resRes = await axios.get('http://localhost:5000/api/restaurantreq', { headers });
+      const resRes = await axios.get('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/restaurantreq', { headers });
       setRestaurantRequests(resRes.data);
     } catch (error) {
       console.error('Error fetching requests:', error);
@@ -109,17 +109,17 @@ const AdminPage = () => {
       
       switch (activeTab) {
         case 'events':
-          endpoint = 'http://localhost:5000/api/events';
+          endpoint = 'https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/events';
           const eventsRes = await axios.get(endpoint, { headers });
           setEvents(eventsRes.data);
           break;
         case 'restaurants':
-          endpoint = 'http://localhost:5000/api/restaurants';
+          endpoint = 'https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/restaurants';
           const restaurantsRes = await axios.get(endpoint, { headers });
           setRestaurants(restaurantsRes.data);
           break;
         case 'accommodations':
-          endpoint = 'http://localhost:5000/api/accommodations';
+          endpoint = 'https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/accommodations';
           const accommodationsRes = await axios.get(endpoint, { headers });
           setAccommodations(accommodationsRes.data);
           break;
@@ -152,7 +152,7 @@ const AdminPage = () => {
       
       console.log('Fetching locations with token:', token.substring(0, 10) + '...');
       
-      const response = await axios.get('http://localhost:5000/api/locations/all', { headers });
+      const response = await axios.get('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/locations/all', { headers });
       console.log('Locations response:', response.data);
       setLocations(response.data);
     } catch (error) {
@@ -204,7 +204,7 @@ const AdminPage = () => {
       
       console.log('Fetching messages with token:', token.substring(0, 10) + '...');
       
-      const response = await axios.get('http://localhost:5000/api/contact', { headers });
+      const response = await axios.get('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/contact', { headers });
       console.log('Messages response:', response.data);
       setMessages(response.data);
     } catch (error) {
@@ -225,7 +225,7 @@ const AdminPage = () => {
       
       // Make API call to accept request
       const response = await axios.post(
-        `http://localhost:5000/api/${collectionName}/${id}/accept`,
+        `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/${collectionName}/${id}/accept`,
         {},
         {
           headers: {
@@ -265,7 +265,7 @@ const AdminPage = () => {
       
       // Make API call to reject request
       const response = await axios.post(
-        `http://localhost:5000/api/${collectionName}/${id}/reject`,
+        `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/${collectionName}/${id}/reject`,
         {},
         {
           headers: {
@@ -298,7 +298,7 @@ const AdminPage = () => {
     try {
       const token = localStorage.getItem('token');
       await axios.delete(
-        `http://localhost:5000/api/${collectionName}/${id}`,
+        `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/${collectionName}/${id}`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -350,13 +350,13 @@ const AdminPage = () => {
         // Handle saving edited request
         switch (activeTab) {
           case 'eventRequests':
-            endpoint = `http://localhost:5000/api/eventreq/${editingRequest._id}`;
+            endpoint = `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/eventreq/${editingRequest._id}`;
             break;
           case 'accommodationRequests':
-            endpoint = `http://localhost:5000/api/accommodationreq/${editingRequest._id}`;
+            endpoint = `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/accommodationreq/${editingRequest._id}`;
             break;
           case 'restaurantRequests':
-            endpoint = `http://localhost:5000/api/restaurantreq/${editingRequest._id}`;
+            endpoint = `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/restaurantreq/${editingRequest._id}`;
             break;
           default:
             throw new Error('Invalid request type');
@@ -366,10 +366,10 @@ const AdminPage = () => {
         // Handle saving edited approved item
         switch (activeTab) {
           case 'events':
-            endpoint = `http://localhost:5000/api/events/${editingItem._id}`;
+            endpoint = `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/events/${editingItem._id}`;
             break;
           case 'accommodations':
-            endpoint = `http://localhost:5000/api/accommodations/${editingItem._id}`;
+            endpoint = `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/accommodations/${editingItem._id}`;
             // Format location data properly if it exists
             if (editingItem.location && typeof editingItem.location === 'object') {
               // Ensure proper structure for location data
@@ -385,7 +385,7 @@ const AdminPage = () => {
             }
             break;
           case 'restaurants':
-            endpoint = `http://localhost:5000/api/restaurants/${editingItem._id}`;
+            endpoint = `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/restaurants/${editingItem._id}`;
             break;
           default:
             throw new Error('Invalid item type');
@@ -724,7 +724,7 @@ const AdminPage = () => {
                     {selectedItem.images.map((image, index) => (
                       <img 
                         key={index} 
-                        src={image.startsWith('http') ? image : `http://localhost:5000/${image}`} 
+                        src={image.startsWith('http') ? image : `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/${image}`} 
                         alt={`Event ${index + 1}`} 
                         className="detail-image"
                       />
@@ -768,7 +768,7 @@ const AdminPage = () => {
                     {selectedItem.images.map((image, index) => (
                       <img 
                         key={index} 
-                        src={image.startsWith('http') ? image : `http://localhost:5000/${image}`} 
+                        src={image.startsWith('http') ? image : `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/${image}`} 
                         alt={`Accommodation ${index + 1}`} 
                         className="detail-image"
                       />
@@ -811,7 +811,7 @@ const AdminPage = () => {
                     {selectedItem.images.map((image, index) => (
                       <img 
                         key={index} 
-                        src={image.startsWith('http') ? image : `http://localhost:5000/${image}`} 
+                        src={image.startsWith('http') ? image : `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/${image}`} 
                         alt={`Restaurant ${index + 1}`} 
                         className="detail-image"
                       />
@@ -1323,7 +1323,7 @@ const AdminPage = () => {
       
       // Use the simpler axios.post format which might work better
       const response = await axios.post(
-        `http://localhost:5000/api/accommodationreq/${id}/accept`,
+        `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/accommodationreq/${id}/accept`,
         {}, // empty data object
         {
           headers: {
@@ -1367,7 +1367,7 @@ const AdminPage = () => {
       };
       
       await axios.post(
-        'http://localhost:5000/api/locations/country',
+        'https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/locations/country',
         { country: newCountry },
         { headers }
       );
@@ -1399,7 +1399,7 @@ const AdminPage = () => {
       };
       
       await axios.post(
-        `http://localhost:5000/api/locations/city/${selectedCountry}`,
+        `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/locations/city/${selectedCountry}`,
         { city: newCity },
         { headers }
       );
@@ -1431,7 +1431,7 @@ const AdminPage = () => {
       };
       
       await axios.delete(
-        `http://localhost:5000/api/locations/country/${country}`,
+        `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/locations/country/${country}`,
         { headers }
       );
       
@@ -1461,7 +1461,7 @@ const AdminPage = () => {
       };
       
       await axios.delete(
-        `http://localhost:5000/api/locations/city/${country}/${city}`,
+        `https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/locations/city/${country}/${city}`,
         { headers }
       );
       
@@ -1584,7 +1584,7 @@ const AdminPage = () => {
 
   const handleMarkAsRead = async (id, isRead) => {
     try {
-      await axios.patch(`http://localhost:5000/api/contact/${id}/read`, 
+      await axios.patch(`https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/contact/${id}/read`, 
         { read: isRead },
         { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
       );
@@ -1604,7 +1604,7 @@ const AdminPage = () => {
     }
 
     try {
-      await axios.delete(`http://localhost:5000/api/contact/${id}`, {
+      await axios.delete(`https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/contact/${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       setMessages(messages.filter(msg => msg._id !== id));

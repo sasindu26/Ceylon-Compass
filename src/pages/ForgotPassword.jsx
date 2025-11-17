@@ -17,7 +17,7 @@ const ForgotPassword = () => {
     setSuccess('');
 
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/forgot-password', { email });
+      const response = await axios.post('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/auth/forgot-password', { email });
       setSuccess(response.data.message);
       setTimeout(() => {
         navigate('/login');

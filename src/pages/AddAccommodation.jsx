@@ -266,7 +266,7 @@ const AddAccommodation = () => {
       console.log("Sending data to server:", JSON.stringify(accommodationReqData));
 
       const response = await axios.post(
-        'http://localhost:5000/api/accommodationreq',
+        'https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/accommodationreq',
         accommodationReqData,
         {
           headers: {

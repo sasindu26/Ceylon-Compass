@@ -57,7 +57,7 @@ const Restaurants = () => {
     const fetchRestaurants = async () => {
       try {
         setLoading(true);
-        let url = 'http://localhost:5000/api/restaurants';
+        let url = 'https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/restaurants';
         
         // Add query parameters based on filters
         const params = new URLSearchParams();

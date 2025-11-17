@@ -23,7 +23,7 @@ const EventDetails = () => {
     try {
       setLoading(true);
       console.log(`Fetching event details for ID: ${id}`);
-      const response = await axios.get(`http://localhost:5000/api/events/${id}`);
+      const response = await axios.get(`https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/events/${id}`);
       console.log('==== EVENT DETAILS RECEIVED ====');
       console.log('Event data received:', response.data);
       console.log('Has ticketTypes:', response.data.ticketTypes ? 'YES' : 'NO');

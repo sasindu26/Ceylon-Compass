@@ -80,7 +80,7 @@ const Contact = () => {
     }
 
     try {
-      await axios.post('http://localhost:5000/api/contact', formData);
+      await axios.post('https://vivacious-fanchon-ceylonweb-e40cba11.koyeb.app/api/contact', formData);
       setSuccess(true);
       setFormData({
         name: '',
