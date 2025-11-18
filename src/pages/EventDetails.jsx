@@ -122,8 +122,46 @@ const EventDetails = () => {
       )}
 
       <div className="event-content">
-        <div className="event-image-container">
-          <img src={event.image} alt={event.title} className="event-image" />
+        <div className="event-left-column">
+          <div className="event-image-container">
+            <img src={event.image} alt={event.title} className="event-image" />
+          </div>
+
+          <br />
+          <br />
+
+          {/* Ticket Types Section - Below the event photo */}
+          {event.ticketTypes && event.ticketTypes.length > 0 && (
+            <div className="ticket-types-section-below-photo">
+              <h3 className="section-heading">Ticket Types</h3>
+              <div className="ticket-types-list">
+                {event.ticketTypes.map((ticket, index) => (
+                  <div key={index} className="ticket-type-card">
+                    <div className="ticket-type-header">
+                      <h4>{ticket.name}</h4>
+                      <span className="ticket-price">
+                        LKR {ticket.price.toLocaleString()}
+                      </span>
+                    </div>
+                    {ticket.description && (
+                      <p className="ticket-description">{ticket.description}</p>
+                    )}
+                    <div className="ticket-availability">
+                      <span
+                        className={
+                          ticket.available > 0 ? "available" : "sold-out"
+                        }
+                      >
+                        {ticket.available > 0
+                          ? `${ticket.available} of ${ticket.quantity} available`
+                          : "Sold Out"}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="event-info">
@@ -189,37 +227,6 @@ const EventDetails = () => {
           </div>
         </div>
       </div>
-
-      {/* Ticket Types Section - Below the event photo and info */}
-      {event.ticketTypes && event.ticketTypes.length > 0 && (
-        <div className="ticket-types-section-bottom">
-          <h3 className="section-heading">Ticket Types</h3>
-          <div className="ticket-types-list">
-            {event.ticketTypes.map((ticket, index) => (
-              <div key={index} className="ticket-type-card">
-                <div className="ticket-type-header">
-                  <h4>{ticket.name}</h4>
-                  <span className="ticket-price">
-                    LKR {ticket.price.toLocaleString()}
-                  </span>
-                </div>
-                {ticket.description && (
-                  <p className="ticket-description">{ticket.description}</p>
-                )}
-                <div className="ticket-availability">
-                  <span
-                    className={ticket.available > 0 ? "available" : "sold-out"}
-                  >
-                    {ticket.available > 0
-                      ? `${ticket.available} of ${ticket.quantity} available`
-                      : "Sold Out"}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Booking Modal */}
       {showBookingModal && (

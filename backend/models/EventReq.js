@@ -1,110 +1,111 @@
 const mongoose = require("mongoose");
-const User = require('./User');
+const User = require("./User");
 
 const eventReqSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   description: {
     type: String,
-    required: true
+    required: true,
   },
   country: {
     type: String,
-    required: true
+    required: true,
   },
   city: {
     type: String,
-    required: true
+    required: true,
   },
   address: {
     type: String,
-    required: true
+    required: true,
   },
   date: {
     type: Date,
-    required: true
+    required: true,
   },
   time: {
     type: String,
-    required: true
+    required: true,
   },
   organizer: {
     name: {
       type: String,
-      required: true
+      required: true,
     },
     contactNumber: {
       type: String,
-      required: true
+      required: true,
     },
     email: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   image: {
     type: String,
-    required: true
+    required: true,
   },
   category: {
     type: String,
-    required: true
+    required: true,
   },
   price: {
     type: Number,
-    default: 0
+    default: 0,
   },
   capacity: {
     type: Number,
-    required: true
+    required: true,
   },
-  ticketTypes: [{
-    name: {
-      type: String,
-      required: true,
-      trim: true
+  ticketTypes: [
+    {
+      name: {
+        type: String,
+        required: true,
+        trim: true,
+      },
+      price: {
+        type: Number,
+        required: true,
+        min: 0,
+      },
+      quantity: {
+        type: Number,
+        required: true,
+        min: 0,
+      },
+      available: {
+        type: Number,
+        required: true,
+        min: 0,
+      },
+      description: {
+        type: String,
+        trim: true,
+      },
     },
-    price: {
-      type: Number,
-      required: true,
-      min: 0
-    },
-    quantity: {
-      type: Number,
-      required: true,
-      min: 0
-    },
-    available: {
-      type: Number,
-      required: true,
-      min: 0
-    },
-    description: {
-      type: String,
-      trim: true
-    }
-  }],
+  ],
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: "User",
     required: true,
-    index: true
   },
   status: {
     type: String,
-    enum: ['pending', 'approved', 'rejected'],
-    default: 'pending'
+    enum: ["pending", "approved", "rejected"],
+    default: "pending",
   },
   createdAt: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 // Add index for createdBy field
 eventReqSchema.index({ createdBy: 1 });
 
-module.exports = mongoose.model("EventReq", eventReqSchema, "eventreq"); 
+module.exports = mongoose.model("EventReq", eventReqSchema, "eventreq");
