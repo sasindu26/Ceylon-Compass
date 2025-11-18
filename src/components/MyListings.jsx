@@ -59,8 +59,17 @@ const MyListings = () => {
           .catch(() => ({ data: [] })),
       ]);
 
+      // Separate events into listings and requests
+      const eventsData = eventsRes.data || [];
+      const eventsListings = eventsData.filter(
+        (item) => item.type !== "request",
+      );
+      const eventsRequests = eventsData.filter(
+        (item) => item.type === "request",
+      );
+
       setListings({
-        events: eventsRes.data || [],
+        events: [...eventsListings, ...eventsRequests], // Combine for display
         restaurants: restaurantsRes.data || [],
         accommodations: accommodationsRes.data || [],
       });
@@ -101,7 +110,13 @@ const MyListings = () => {
     }
   };
 
-  const openDeleteModal = (type, id, title) => {
+  const openDeleteModal = (type, id, title, itemType) => {
+    if (itemType === "request") {
+      alert(
+        "Pending requests cannot be deleted. Please contact admin if needed.",
+      );
+      return;
+    }
     setDeleteModal({ show: true, type, id, title });
   };
 
@@ -109,7 +124,12 @@ const MyListings = () => {
     setDeleteModal({ show: false, type: "", id: "", title: "" });
   };
 
-  const getStatusBadge = (status) => {
+  const getStatusBadge = (status, type) => {
+    if (type === "request") {
+      return (
+        <span className="status-badge status-pending">Pending Review</span>
+      );
+    }
     const statusMap = {
       pending: { text: "Pending Review", class: "status-pending" },
       approved: { text: "Approved", class: "status-approved" },
@@ -125,7 +145,12 @@ const MyListings = () => {
 
   const filterListings = (items) => {
     if (activeFilter === "all") return items;
-    return items.filter((item) => item.status?.toLowerCase() === activeFilter);
+    return items.filter((item) => {
+      if (item.type === "request") {
+        return activeFilter === "pending";
+      }
+      return item.status?.toLowerCase() === activeFilter;
+    });
   };
 
   const renderListingCard = (item, type) => {
@@ -153,7 +178,7 @@ const MyListings = () => {
         <div className="listing-content">
           <div className="listing-header">
             <h3>{item.title || item.name}</h3>
-            {getStatusBadge(item.status)}
+            {getStatusBadge(item.status, item.type)}
           </div>
           <p className="listing-location">
             📍 {item.city}, {item.country}
@@ -178,14 +203,24 @@ const MyListings = () => {
           </p>
 
           <div className="listing-actions">
-            <button
-              className="delete-button"
-              onClick={() =>
-                openDeleteModal(type, item._id, item.title || item.name)
-              }
-            >
-              🗑️ Delete
-            </button>
+            {item.type !== "request" && (
+              <button
+                className="delete-button"
+                onClick={() =>
+                  openDeleteModal(
+                    type,
+                    item._id,
+                    item.title || item.name,
+                    item.type,
+                  )
+                }
+              >
+                🗑️ Delete
+              </button>
+            )}
+            {item.type === "request" && (
+              <span className="pending-note">Awaiting admin approval</span>
+            )}
           </div>
         </div>
       </div>
@@ -200,12 +235,18 @@ const MyListings = () => {
     ];
     return {
       all: all.length,
-      pending: all.filter((item) => item.status?.toLowerCase() === "pending")
-        .length,
-      approved: all.filter((item) => item.status?.toLowerCase() === "approved")
-        .length,
-      rejected: all.filter((item) => item.status?.toLowerCase() === "rejected")
-        .length,
+      pending: all.filter(
+        (item) =>
+          item.type === "request" || item.status?.toLowerCase() === "pending",
+      ).length,
+      approved: all.filter(
+        (item) =>
+          item.type !== "request" && item.status?.toLowerCase() === "approved",
+      ).length,
+      rejected: all.filter(
+        (item) =>
+          item.type !== "request" && item.status?.toLowerCase() === "rejected",
+      ).length,
     };
   };
 

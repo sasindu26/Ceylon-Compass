@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const Event = require("../models/Event");
+const EventReq = require("../models/EventReq");
 const { auth } = require("../middleware/auth"); // Import auth middleware
 
 // Get all events with optional location filter - PUBLIC ROUTE
@@ -196,15 +197,34 @@ router.get("/user/submissions", auth, async (req, res) => {
   }
 });
 
-// Get user's own listings (my listings)
+// Get user's own listings (my listings) - includes both approved events and pending requests
 router.get("/my-listings", auth, async (req, res) => {
   try {
     const userId = req.user._id; // Use _id from auth middleware
 
+    // Fetch approved/rejected events
     const events = await Event.find({ createdBy: userId }).sort({
       createdAt: -1,
     });
-    res.json(events);
+
+    // Fetch pending event requests
+    const eventRequests = await EventReq.find({ createdBy: userId }).sort({
+      createdAt: -1,
+    });
+
+    // Combine and add type field
+    const allListings = [
+      ...events.map((event) => ({ ...event.toObject(), type: "listing" })),
+      ...eventRequests.map((request) => ({
+        ...request.toObject(),
+        type: "request",
+      })),
+    ];
+
+    // Sort combined list by createdAt descending
+    allListings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    res.json(allListings);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }

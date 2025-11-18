@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Accommodation = require("../models/Accommodation");
+const AccommodationReq = require("../models/AccommodationReq");
 const { auth } = require("../middleware/auth"); // Import auth middleware
 
 // Get all accommodations with optional filters
@@ -212,17 +213,44 @@ router.get("/admin/pending", auth, async (req, res) => {
   }
 });
 
-// Get user's own listings (my listings)
+// Get user's own listings (my listings) - includes both approved accommodations and pending requests
 router.get("/my-listings", auth, async (req, res) => {
   try {
     const userId = req.user._id; // Use _id from auth middleware
 
+    // Fetch approved/rejected accommodations
     const accommodations = await Accommodation.find({ createdBy: userId }).sort(
       {
         createdAt: -1,
       },
     );
-    res.json(accommodations);
+
+    // Fetch pending accommodation requests
+    const accommodationRequests = await AccommodationReq.find({
+      createdBy: userId,
+    }).sort({
+      createdAt: -1,
+    });
+
+    // Combine and add type field
+    const allListings = [
+      ...accommodations.map((accommodation) => ({
+        ...accommodation.toObject(),
+        type: "listing",
+      })),
+      ...accommodationRequests.map((request) => ({
+        ...request.toObject(),
+        country: request.location.country,
+        city: request.location.city,
+        address: request.location.address,
+        type: "request",
+      })),
+    ];
+
+    // Sort combined list by createdAt descending
+    allListings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    res.json(allListings);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }

@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Restaurant = require("../models/Restaurant");
+const RestaurantReq = require("../models/RestaurantReq");
 const { auth } = require("../middleware/auth"); // Import auth middleware
 
 // GET /api/restaurants - Get all restaurants with optional location filter
@@ -188,15 +189,39 @@ router.post("/:id/reviews", auth, async (req, res) => {
   }
 });
 
-// Get user's own listings (my listings)
+// Get user's own listings (my listings) - includes both approved restaurants and pending requests
 router.get("/my-listings", auth, async (req, res) => {
   try {
     const userId = req.user._id; // Use _id from auth middleware
 
+    // Fetch approved/rejected restaurants
     const restaurants = await Restaurant.find({ createdBy: userId }).sort({
       createdAt: -1,
     });
-    res.json(restaurants);
+
+    // Fetch pending restaurant requests
+    const restaurantRequests = await RestaurantReq.find({
+      createdBy: userId,
+    }).sort({
+      createdAt: -1,
+    });
+
+    // Combine and add type field
+    const allListings = [
+      ...restaurants.map((restaurant) => ({
+        ...restaurant.toObject(),
+        type: "listing",
+      })),
+      ...restaurantRequests.map((request) => ({
+        ...request.toObject(),
+        type: "request",
+      })),
+    ];
+
+    // Sort combined list by createdAt descending
+    allListings.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    res.json(allListings);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
